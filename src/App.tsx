@@ -4,6 +4,7 @@ import InvoicePreview from './components/InvoicePreview';
 import { defaultInvoice } from './types/invoice';
 import { saveInvoice } from './services/api';
 import { Save } from 'lucide-react';
+import ExportPDFButton from './components/ExportPDFButton';
 
 function App() {
   const [invoice, setInvoice] = useState(defaultInvoice);
@@ -33,6 +34,7 @@ function App() {
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-gray-900">Invoice Builder</h1>
             <div className="flex items-center gap-4">
+              <ExportPDFButton invoice={invoice} />
               {message && (
                 <p className={`text-sm ${
                   message.type === 'success' ? 'text-green-600' : 'text-red-600'
@@ -64,7 +66,10 @@ function App() {
 
           {/* Form Panel - Right Side */}
           <div className="bg-white p-4 lg:p-8 overflow-auto">
-            <InvoiceForm invoice={invoice} onInvoiceChange={setInvoice} />
+            <InvoiceForm 
+              invoice={invoice} 
+              onInvoiceChange={(updated) => setInvoice(updated)}
+            />
           </div>
         </div>
       </div>

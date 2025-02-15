@@ -3,12 +3,13 @@ import ModernTemplate from '../templates/ModernTemplate';
 import MinimalTemplate from '../templates/MinimalTemplate';
 import ProfessionalTemplate from '../templates/ProfessionalTemplate';
 import FreelancerTemplate from '../templates/FreelancerTemplate';
+import { forwardRef } from 'react';
 
 interface Props {
   invoice: Invoice;
 }
 
-export default function InvoicePreview({ invoice }: Props) {
+const InvoicePreview = forwardRef<HTMLDivElement, Props>(({ invoice }, ref) => {
   const templates = {
     modern: ModernTemplate,
     minimal: MinimalTemplate,
@@ -19,10 +20,12 @@ export default function InvoicePreview({ invoice }: Props) {
   const TemplateComponent = templates[invoice.template];
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div ref={ref} className="bg-white rounded-lg shadow-lg overflow-hidden">
       <div className="p-6">
         <TemplateComponent invoice={invoice} />
       </div>
     </div>
   );
-}
+});
+
+export default InvoicePreview;
