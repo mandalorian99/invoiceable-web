@@ -224,8 +224,8 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
                     if (field.type === 'calculated') return null;
                     
                     return (
-                      <div key={field.key}>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <div key={field.key} className="space-y-1">
+                        <label className="block text-sm font-medium text-gray-700">
                           {field.label}
                           {field.required && <span className="text-red-500">*</span>}
                         </label>
@@ -235,7 +235,9 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
                           onChange={(e) => updateItem(item.id, field.key, 
                             field.type === 'number' ? parseFloat(e.target.value) : e.target.value
                           )}
-                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                          className="w-full rounded-md border-gray-300 shadow-sm 
+                                    focus:border-blue-500 focus:ring-blue-500 
+                                    text-sm px-3 py-2"
                           min={field.validation?.min}
                           max={field.validation?.max}
                           step={field.validation?.step || (field.type === 'number' ? 0.01 : undefined)}
@@ -252,16 +254,17 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
                 </div>
 
                 {/* Amount display */}
-                <div className="w-32">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Amount</label>
-                  <div className="block w-full rounded-md bg-gray-100 px-3 py-2 text-right sm:text-sm">
+                <div className="w-32 space-y-1">
+                  <label className="block text-sm font-medium text-gray-700">Amount</label>
+                  <div className="w-full rounded-md bg-gray-100 px-3 py-2 text-right 
+                                text-sm font-medium text-gray-700">
                     ${item.amount.toFixed(2)}
                   </div>
                 </div>
 
                 <button
                   onClick={() => removeItem(item.id)}
-                  className="mt-6 p-2 text-gray-400 hover:text-red-500"
+                  className="mt-7 p-2 text-gray-400 hover:text-red-500 self-start"
                 >
                   <Trash2 className="h-5 w-5" />
                 </button>
