@@ -1,4 +1,3 @@
-import React from 'react';
 import { Invoice } from '../../types/invoice';
 
 export default function ProfessionalTemplate({ invoice }: { invoice: Invoice }) {

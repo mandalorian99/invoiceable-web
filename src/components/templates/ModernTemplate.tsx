@@ -1,4 +1,3 @@
-import React from 'react';
 import { Invoice } from '../../types/invoice';
 
 export default function ModernTemplate({ invoice }: { invoice: Invoice }) {
