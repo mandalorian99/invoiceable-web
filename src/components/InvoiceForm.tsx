@@ -1,5 +1,6 @@
 import { Plus, Trash2 } from 'lucide-react';
 import { Invoice, InvoiceItem } from '../types/invoice';
+import { VISUAL_TEMPLATES } from '../config/visualTemplates';
 
 interface Props {
   invoice: Invoice;
@@ -12,7 +13,9 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
       id: crypto.randomUUID(),
       description: '',
       quantity: 1,
-      price: 0
+      price: 0,
+      fields: {},
+      amount: 0
     };
     onInvoiceChange({
       ...invoice,
@@ -43,11 +46,11 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Choose Template</h2>
           <div className="grid grid-cols-3 gap-4">
-            {['modern', 'minimal', 'professional'].map((template) => (
+            {Object.values(VISUAL_TEMPLATES).map((template) => (
               <label
-                key={template}
+                key={template.id}
                 className={`relative cursor-pointer rounded-lg p-2 transition-all ${
-                  invoice.template === template
+                  invoice.template === template.id
                     ? 'ring-2 ring-blue-200 bg-blue-50'
                     : 'bg-gray-50 hover:bg-gray-100'
                 }`}
@@ -55,27 +58,21 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
                 <input
                   type="radio"
                   name="template"
-                  value={template}
-                  checked={invoice.template === template}
+                  value={template.id}
+                  checked={invoice.template === template.id}
                   onChange={(e) => onInvoiceChange({ ...invoice, template: e.target.value as Invoice['template'] })}
                   className="hidden"
                 />
-                <div className="aspect-video bg-gray-50 rounded-md overflow-hidden">
+                <div className="h-32 bg-gray-50 rounded-md overflow-hidden">
                   <img
-                    src={
-                      template === 'modern' 
-                        ? 'https://images.unsplash.com/photo-1613243555978-636c48dc653c?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'
-                        : template === 'minimal'
-                        ? 'https://images.unsplash.com/photo-1586232702178-f044c5f4d4b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'
-                        : 'https://images.unsplash.com/photo-1586232702178-f044c5f4d4b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'
-                    }
-                    alt={`${template} template`}
+                    src={template.previewImage}
+                    alt={`${template.name} template`}
                     className="object-cover w-full h-full"
                     style={{ background: '#f8fafc' }}
                   />
                 </div>
-                <span className="block text-center mt-2 font-medium capitalize">
-                  {template}
+                <span className="block text-center mt-2 font-medium">
+                  {template.name}
                 </span>
               </label>
             ))}
