@@ -17,26 +17,38 @@ export default function ExportPDFButton({ invoice }: Props) {
     const element = invoiceRef.current;
     if (!element) return;
 
-    // Capture the invoice as image
+    // Temporarily make preview visible for capture
+    element.classList.remove('sr-only');
+    
     const canvas = await html2canvas(element, {
-      scale: 2, // Increase for better resolution
+      scale: 2,
       useCORS: true,
       logging: true,
+      backgroundColor: '#ffffff',
+      onclone: (clonedDoc) => {
+        // Force white background for PDF
+        clonedDoc.getElementById('pdf-preview')?.classList.add('!bg-white');
+      }
     });
 
-    // Create PDF
+    // Restore hidden state
+    element.classList.add('sr-only');
+
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF('p', 'mm', 'a4');
-    const imgWidth = 210; // A4 width in mm
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = (canvas.height * pageWidth) / canvas.width;
+    
+    pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
     pdf.save(`invoice-${invoice.id}.pdf`);
   };
 
   return (
     <>
-      <div className="sr-only"> {/* Screen-reader only */}
+      <div 
+        id="pdf-preview" 
+        className="sr-only absolute top-[-9999px] left-[-9999px] w-[210mm]"
+      >
         <InvoicePreview ref={invoiceRef} invoice={invoice} />
       </div>
       <button 

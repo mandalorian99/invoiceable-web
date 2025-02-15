@@ -20,7 +20,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, Props>(({ invoice }, ref) => {
   const TemplateComponent = templates[invoice.template];
 
   return (
-    <div ref={ref} className="bg-white rounded-lg shadow-lg overflow-hidden">
+    <div ref={ref} className="invoice-preview bg-white">
       <div className="p-6">
         <TemplateComponent invoice={invoice} />
       </div>
