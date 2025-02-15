@@ -1,6 +1,7 @@
 import { Plus, Trash2 } from 'lucide-react';
 import { Invoice, InvoiceItem } from '../types/invoice';
 import { TEMPLATE_CONFIGS } from '../config/templates';
+import { useState } from 'react';
 
 interface Props {
   invoice: Invoice;
@@ -8,6 +9,8 @@ interface Props {
 }
 
 export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   const addItem = () => {
     const templateConfig = TEMPLATE_CONFIGS[invoice.template];
     const newItem: InvoiceItem = {
@@ -37,13 +40,23 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
     });
   };
 
-  const updateItem = (id: string, field: keyof InvoiceItem, value: string | number) => {
-    onInvoiceChange({
-      ...invoice,
-      items: invoice.items.map(item =>
-        item.id === id ? { ...item, [field]: value } : item
-      )
+  const updateItem = (id: string, field: string, value: any) => {
+    const updatedItems = invoice.items.map(item => {
+      if (item.id !== id) return item;
+      
+      const updatedItem = { ...item, [field]: value };
+      
+      // Auto-calculate calculated fields
+      TEMPLATE_CONFIGS[invoice.template].itemFields.forEach(configField => {
+        if (configField.type === 'calculated' && configField.calculate) {
+          updatedItem[configField.key] = configField.calculate(updatedItem);
+        }
+      });
+
+      return updatedItem;
     });
+
+    onInvoiceChange({ ...invoice, items: updatedItems });
   };
 
   return (
@@ -205,30 +218,50 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
           <div className="space-y-4">
             {invoice.items.map((item) => (
               <div key={item.id} className="flex gap-4 items-start">
-                <input
-                  type="text"
-                  placeholder="Description"
-                  value={item.description}
-                  onChange={(e) => updateItem(item.id, 'description', e.target.value)}
-                  className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-                <input
-                  type="number"
-                  placeholder="Qty"
-                  value={item.quantity}
-                  onChange={(e) => updateItem(item.id, 'quantity', parseInt(e.target.value))}
-                  className="w-20 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-                <input
-                  type="number"
-                  placeholder="Price"
-                  value={item.price}
-                  onChange={(e) => updateItem(item.id, 'price', parseFloat(e.target.value))}
-                  className="w-32 rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
+                {/* Dynamic fields */}
+                <div className="flex-1 grid grid-cols-3 gap-4">
+                  {TEMPLATE_CONFIGS[invoice.template].itemFields.map((field) => {
+                    if (field.type === 'calculated') return null;
+                    
+                    return (
+                      <div key={field.key}>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          {field.label}
+                          {field.required && <span className="text-red-500">*</span>}
+                        </label>
+                        <input
+                          type={field.type === 'number' ? 'number' : 'text'}
+                          value={item[field.key] || ''}
+                          onChange={(e) => updateItem(item.id, field.key, 
+                            field.type === 'number' ? parseFloat(e.target.value) : e.target.value
+                          )}
+                          className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                          min={field.validation?.min}
+                          max={field.validation?.max}
+                          step={field.validation?.step || (field.type === 'number' ? 0.01 : undefined)}
+                          required={field.required}
+                        />
+                        {errors[`${item.id}-${field.key}`] && (
+                          <p className="text-red-500 text-xs mt-1">
+                            {errors[`${item.id}-${field.key}`]}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Amount display */}
+                <div className="w-32">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+                  <div className="block w-full rounded-md bg-gray-100 px-3 py-2 text-right sm:text-sm">
+                    ${item.amount.toFixed(2)}
+                  </div>
+                </div>
+
                 <button
                   onClick={() => removeItem(item.id)}
-                  className="p-2 text-red-600 hover:text-red-800"
+                  className="mt-6 p-2 text-gray-400 hover:text-red-500"
                 >
                   <Trash2 className="h-5 w-5" />
                 </button>
