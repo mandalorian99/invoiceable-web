@@ -1,6 +1,6 @@
 import { Plus, Trash2 } from 'lucide-react';
 import { Invoice, InvoiceItem } from '../types/invoice';
-import { VISUAL_TEMPLATES } from '../config/visualTemplates';
+import { TEMPLATE_CONFIGS } from '../config/templates';
 
 interface Props {
   invoice: Invoice;
@@ -9,14 +9,21 @@ interface Props {
 
 export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
   const addItem = () => {
+    const templateConfig = TEMPLATE_CONFIGS[invoice.template];
     const newItem: InvoiceItem = {
       id: crypto.randomUUID(),
-      description: '',
       quantity: 1,
       price: 0,
-      fields: {},
       amount: 0
     };
+
+    // Initialize fields from config
+    templateConfig.itemFields.forEach(field => {
+      if (field.type !== 'calculated') {
+        newItem[field.key] = field.type === 'number' ? 0 : '';
+      }
+    });
+
     onInvoiceChange({
       ...invoice,
       items: [...invoice.items, newItem]
@@ -46,7 +53,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Choose Template</h2>
           <div className="grid grid-cols-3 gap-4">
-            {Object.values(VISUAL_TEMPLATES).map((template) => (
+            {Object.values(TEMPLATE_CONFIGS).map((template) => (
               <label
                 key={template.id}
                 className={`relative cursor-pointer rounded-lg p-2 transition-all ${

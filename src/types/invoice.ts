@@ -10,17 +10,43 @@ export interface InvoiceTemplateConfig {
   id: string;
   name: string;
   description: string;
-  itemFields: InvoiceItemConfig[];
+  itemFields: ItemFieldConfig[];
+  validationRules?: ValidationRules;
   defaultNotes?: string;
+  meta?: Record<string, any>;
+  previewImage: string;
+}
+
+export interface ItemFieldConfig {
+  key: string;
+  label: string;
+  type: 'text' | 'number' | 'date' | 'calculated';
+  required?: boolean;
+  validation?: FieldValidation;
+  calculate?: (fields: Record<string, any>) => number;
+}
+
+export interface FieldValidation {
+  min?: number;
+  max?: number;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+}
+
+export interface ValidationRules {
+  custom?: Array<{
+    condition: (items: InvoiceItem[]) => boolean;
+    message: string;
+  }>;
 }
 
 export interface InvoiceItem {
   id: string;
-  description: string;
-  fields: Record<string, any>;
-  amount: number;
+  [key: string]: any; // Allows dynamic fields from config
   quantity: number;
   price: number;
+  amount: number;
 }
 
 export interface Invoice {
