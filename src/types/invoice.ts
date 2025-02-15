@@ -1,6 +1,24 @@
+export interface InvoiceItemConfig {
+  key: string;
+  label: string;
+  type: 'number' | 'text' | 'date' | 'hours';
+  required?: boolean;
+  calculate?: (fields: Record<string, any>) => number;
+}
+
+export interface InvoiceTemplateConfig {
+  id: string;
+  name: string;
+  description: string;
+  itemFields: InvoiceItemConfig[];
+  defaultNotes?: string;
+}
+
 export interface InvoiceItem {
   id: string;
   description: string;
+  fields: Record<string, any>;
+  amount: number;
   quantity: number;
   price: number;
 }
@@ -23,6 +41,8 @@ export interface Invoice {
   items: InvoiceItem[];
   notes: string;
   template: 'modern' | 'minimal' | 'professional';
+  invoiceType: 'hourly' | 'fixed_term';
+  templateConfig: string; // Reference to template config ID
 }
 
 export const defaultInvoice: Invoice = {
@@ -42,5 +62,7 @@ export const defaultInvoice: Invoice = {
   },
   items: [],
   notes: '',
-  template: 'modern'
+  template: 'modern',
+  invoiceType: 'hourly',
+  templateConfig: ''
 };
