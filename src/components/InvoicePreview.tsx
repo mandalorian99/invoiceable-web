@@ -1,4 +1,3 @@
-import React from 'react';
 import { Invoice } from '../types/invoice';
 import ModernTemplate from './templates/ModernTemplate';
 import MinimalTemplate from './templates/MinimalTemplate';

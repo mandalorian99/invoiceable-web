@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import InvoiceForm from './components/InvoiceForm';
 import InvoicePreview from './components/InvoicePreview';
 import { defaultInvoice } from './types/invoice';
@@ -29,9 +29,9 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="max-w-[1800px] mx-auto">
-        <header className="py-6 px-4 sm:px-6 lg:px-8 border-b bg-white">
+        <header className="py-4 px-4 sm:px-6 lg:px-8 border-b bg-white">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-gray-900">Invoice Builder</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Invoice Builder</h1>
             <div className="flex items-center gap-4">
               {message && (
                 <p className={`text-sm ${

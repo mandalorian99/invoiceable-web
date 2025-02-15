@@ -1,4 +1,3 @@
-import React from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import { Invoice, InvoiceItem } from '../types/invoice';
 
@@ -38,7 +37,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg relative pb-20">
+    <div className="bg-white p-6 pb-20">
       <div className="space-y-6">
         {/* Template Selection */}
         <div className="mb-8">
@@ -47,10 +46,10 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
             {['modern', 'minimal', 'professional'].map((template) => (
               <label
                 key={template}
-                className={`relative cursor-pointer border-2 rounded-lg p-2 transition-all ${
+                className={`relative cursor-pointer rounded-lg p-2 transition-all ${
                   invoice.template === template
-                    ? 'border-blue-500 ring-2 ring-blue-200'
-                    : 'border-gray-200 hover:border-blue-200'
+                    ? 'ring-2 ring-blue-200 bg-blue-50'
+                    : 'bg-gray-50 hover:bg-gray-100'
                 }`}
               >
                 <input
@@ -106,7 +105,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
         </div>
 
         {/* From Section */}
-        <div className="border-t pt-6">
+        <div className="pt-6">
           <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
             <span className="mr-2">📨</span>
             From
@@ -146,7 +145,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
         </div>
 
         {/* To Section */}
-        <div className="border-t pt-6">
+        <div className="pt-6">
           <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
             <span className="mr-2">📧</span>
             To
@@ -186,7 +185,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
         </div>
 
         {/* Items Section */}
-        <div className="border-t pt-6">
+        <div className="pt-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-semibold text-gray-900 flex items-center">
               <span className="mr-2">🛒</span>
@@ -235,7 +234,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
         </div>
 
         {/* Notes Section */}
-        <div className="border-t pt-6">
+        <div className="pt-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
           <textarea
             value={invoice.notes}
@@ -247,15 +246,15 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
         </div>
       </div>
 
-      <div className="fixed bottom-6 right-6">
+      {/* <div className="fixed bottom-6 right-6">
         <button
-          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform hover:scale-105"
+          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
           onClick={() => console.log('Save invoice')}
         >
           <Plus className="h-5 w-5 mr-2" />
           Save Invoice
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }
