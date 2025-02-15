@@ -1,4 +1,4 @@
-import { Invoice } from '../../types/invoice';
+import { Invoice } from '../types/invoice';
 
 export default function ProfessionalTemplate({ invoice }: { invoice: Invoice }) {
   const total = invoice.items.reduce((sum, item) => sum + item.quantity * item.price, 0);

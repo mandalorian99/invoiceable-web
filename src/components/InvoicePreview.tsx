@@ -1,7 +1,7 @@
 import { Invoice } from '../types/invoice';
-import ModernTemplate from './templates/ModernTemplate';
-import MinimalTemplate from './templates/MinimalTemplate';
-import ProfessionalTemplate from './templates/ProfessionalTemplate';
+import ModernTemplate from '../templates/ModernTemplate';
+import MinimalTemplate from '../templates/MinimalTemplate';
+import ProfessionalTemplate from '../templates/ProfessionalTemplate';
 
 interface Props {
   invoice: Invoice;
