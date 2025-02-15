@@ -38,20 +38,49 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
+    <div className="bg-white p-6 rounded-lg shadow-lg relative pb-20">
       <div className="space-y-6">
         {/* Template Selection */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Template</label>
-          <select
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            value={invoice.template}
-            onChange={(e) => onInvoiceChange({ ...invoice, template: e.target.value as Invoice['template'] })}
-          >
-            <option value="modern">Modern</option>
-            <option value="minimal">Minimal</option>
-            <option value="professional">Professional</option>
-          </select>
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Choose Template</h2>
+          <div className="grid grid-cols-3 gap-4">
+            {['modern', 'minimal', 'professional'].map((template) => (
+              <label
+                key={template}
+                className={`relative cursor-pointer border-2 rounded-lg p-2 transition-all ${
+                  invoice.template === template
+                    ? 'border-blue-500 ring-2 ring-blue-200'
+                    : 'border-gray-200 hover:border-blue-200'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="template"
+                  value={template}
+                  checked={invoice.template === template}
+                  onChange={(e) => onInvoiceChange({ ...invoice, template: e.target.value as Invoice['template'] })}
+                  className="hidden"
+                />
+                <div className="aspect-video bg-gray-50 rounded-md overflow-hidden">
+                  <img
+                    src={
+                      template === 'modern' 
+                        ? 'https://images.unsplash.com/photo-1613243555978-636c48dc653c?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'
+                        : template === 'minimal'
+                        ? 'https://images.unsplash.com/photo-1586232702178-f044c5f4d4b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'
+                        : 'https://images.unsplash.com/photo-1586232702178-f044c5f4d4b7?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'
+                    }
+                    alt={`${template} template`}
+                    className="object-cover w-full h-full"
+                    style={{ background: '#f8fafc' }}
+                  />
+                </div>
+                <span className="block text-center mt-2 font-medium capitalize">
+                  {template}
+                </span>
+              </label>
+            ))}
+          </div>
         </div>
 
         {/* Invoice Details */}
@@ -77,8 +106,11 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
         </div>
 
         {/* From Section */}
-        <div className="border-t pt-4">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">From</h3>
+        <div className="border-t pt-6">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <span className="mr-2">📨</span>
+            From
+          </h3>
           <div className="space-y-4">
             <input
               type="text"
@@ -88,7 +120,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
                 ...invoice,
                 from: { ...invoice.from, name: e.target.value }
               })}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
             />
             <input
               type="email"
@@ -98,7 +130,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
                 ...invoice,
                 from: { ...invoice.from, email: e.target.value }
               })}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
             />
             <textarea
               placeholder="Your Address"
@@ -107,15 +139,18 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
                 ...invoice,
                 from: { ...invoice.from, address: e.target.value }
               })}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               rows={3}
             />
           </div>
         </div>
 
         {/* To Section */}
-        <div className="border-t pt-4">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">To</h3>
+        <div className="border-t pt-6">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+            <span className="mr-2">📧</span>
+            To
+          </h3>
           <div className="space-y-4">
             <input
               type="text"
@@ -125,7 +160,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
                 ...invoice,
                 to: { ...invoice.to, name: e.target.value }
               })}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
             />
             <input
               type="email"
@@ -135,7 +170,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
                 ...invoice,
                 to: { ...invoice.to, email: e.target.value }
               })}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
             />
             <textarea
               placeholder="Client Address"
@@ -144,16 +179,19 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
                 ...invoice,
                 to: { ...invoice.to, address: e.target.value }
               })}
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               rows={3}
             />
           </div>
         </div>
 
         {/* Items Section */}
-        <div className="border-t pt-4">
+        <div className="border-t pt-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-medium text-gray-900">Items</h3>
+            <h3 className="text-xl font-semibold text-gray-900 flex items-center">
+              <span className="mr-2">🛒</span>
+              Items
+            </h3>
             <button
               onClick={addItem}
               className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -197,16 +235,26 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
         </div>
 
         {/* Notes Section */}
-        <div className="border-t pt-4">
+        <div className="border-t pt-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
           <textarea
             value={invoice.notes}
             onChange={(e) => onInvoiceChange({ ...invoice, notes: e.target.value })}
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
             rows={4}
             placeholder="Add any notes or terms of service"
           />
         </div>
+      </div>
+
+      <div className="fixed bottom-6 right-6">
+        <button
+          className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-transform hover:scale-105"
+          onClick={() => console.log('Save invoice')}
+        >
+          <Plus className="h-5 w-5 mr-2" />
+          Save Invoice
+        </button>
       </div>
     </div>
   );
