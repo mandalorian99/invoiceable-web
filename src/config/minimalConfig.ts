@@ -59,5 +59,7 @@ export const minimalConfig: InvoiceTemplateConfig = {
   meta: {
     accentColor: '#4a5568',
     layoutType: 'compact'
-  }
+  },
+  
+  industry: 'general',
 }; 

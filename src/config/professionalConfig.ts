@@ -58,6 +58,12 @@ export const professionalConfig: InvoiceTemplateConfig = {
   
   meta: {
     accentColor: '#1a365d',
-    layoutType: 'detailed'
-  }
+    layoutType: 'detailed',
+    industrySpecific: {
+      showHourlyRates: true,
+      serviceCategories: ['Software Development', 'Consulting', 'Maintenance']
+    }
+  },
+  
+  industry: 'it',
 }; 

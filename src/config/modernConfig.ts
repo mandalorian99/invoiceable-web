@@ -62,4 +62,6 @@ export const modernConfig: InvoiceTemplateConfig = {
   },
   
   previewImage: 'https://images.unsplash.com/photo-1613243555978-636c48dc653c?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+  
+  industry: 'general', // Default industry
 }; 

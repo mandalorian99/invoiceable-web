@@ -15,6 +15,7 @@ export interface InvoiceTemplateConfig {
   defaultNotes?: string;
   meta?: Record<string, any>;
   previewImage: string;
+  industry: 'general' | 'it' | 'construction' | 'healthcare' | 'legal' | 'freelance';
 }
 
 export interface ItemFieldConfig {
@@ -32,6 +33,7 @@ export interface FieldValidation {
   minLength?: number;
   maxLength?: number;
   pattern?: string;
+  step?: number;
 }
 
 export interface ValidationRules {
