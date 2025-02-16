@@ -1,3 +1,10 @@
+/**
+ * @license
+ * Invoiceable - Open Source Invoice Builder
+ * Copyright (C) 2024 Mahendra Choudhary
+ * AGPL-3.0 License with commercial terms
+ * https://github.com/mandalorian99/invoiceable-web
+ */
 import { Invoice } from '../types/invoice';
 
 const API_BASE_URL = 'https://api.example.com'; // Replace with your actual API URL

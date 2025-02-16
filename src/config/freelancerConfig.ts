@@ -1,3 +1,4 @@
+
 import { InvoiceTemplateConfig } from '../types/invoice';
 
 export const freelancerConfig: InvoiceTemplateConfig = {
