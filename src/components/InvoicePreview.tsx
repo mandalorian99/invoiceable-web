@@ -11,6 +11,7 @@ import MinimalTemplate from '../templates/MinimalTemplate';
 import ProfessionalTemplate from '../templates/ProfessionalTemplate';
 import FreelancerTemplate from '../templates/FreelancerTemplate';
 import { forwardRef } from 'react';
+import LegionTemplate from '../templates/LegionTemplate';
 
 interface Props {
   invoice: Invoice;
@@ -21,9 +22,12 @@ const InvoicePreview = forwardRef<HTMLDivElement, Props>(({ invoice }, ref) => {
     modern: ModernTemplate,
     minimal: MinimalTemplate,
     professional: ProfessionalTemplate,
-    freelancer: FreelancerTemplate
+    freelancer: FreelancerTemplate,
+    legion: LegionTemplate
   };
 
+  // Rendering the template based on the invoice templates
+  // templates path: src/templates/LegionTemplate.tsx
   const TemplateComponent = templates[invoice.template];
 
   return (
