@@ -99,5 +99,5 @@ export const defaultInvoice: Invoice = {
   notes: '',
   template: 'modern',
   invoiceType: 'hourly',
-  templateConfig: ''
+  templateConfig: 'hourly'
 };

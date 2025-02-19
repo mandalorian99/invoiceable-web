@@ -10,6 +10,7 @@ import { minimalConfig } from '../minimalConfig';
 import { InvoiceTemplateConfig } from '../../types/invoice';
 import { professionalConfig } from '../professionalConfig';
 import { freelancerConfig } from '../freelancerConfig';
+import { legionConfig } from '../legionConfig';
 // Import other template configs here
 
 export const TEMPLATE_CONFIGS: Record<string, InvoiceTemplateConfig> = {
@@ -17,5 +18,6 @@ export const TEMPLATE_CONFIGS: Record<string, InvoiceTemplateConfig> = {
   minimal: minimalConfig,
   professional: professionalConfig,
   freelancer: freelancerConfig,
+  legion: legionConfig,
   // Add other templates
 }; 
