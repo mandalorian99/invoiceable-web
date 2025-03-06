@@ -93,7 +93,15 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
             <input
               type="date"
               value={invoice.date}
-              onChange={(e) => onInvoiceChange({ ...invoice, date: e.target.value })}
+              onChange={(e) => {
+                const newDate = e.target.value;
+                const newDueDate = new Date(new Date(newDate).getTime() + 30 * 24 * 60 * 60 * 1000)
+                .toISOString()
+                .split('T')[0];
+
+                onInvoiceChange({ ...invoice, date: newDate, dueDate: newDueDate })
+              }}
+              
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
