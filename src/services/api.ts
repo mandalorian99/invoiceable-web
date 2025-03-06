@@ -7,7 +7,7 @@
  */
 import { Invoice } from '../types/invoice';
 
-const API_BASE_URL = 'https://api.example.com'; // Replace with your actual API URL
+const API_BASE_URL = 'http://localhost:3000/api'; // Replace with your actual API URL
 
 export async function saveInvoice(invoice: Invoice): Promise<{ success: boolean; message: string }> {
   console.log(invoice);
