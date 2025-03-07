@@ -7,10 +7,34 @@
  */
 import { Invoice } from '../types/invoice';
 
-const API_BASE_URL = 'https://api.example.com'; // Replace with your actual API URL
+const API_BASE_URL = 'http://localhost:3000/api'; // Replace with your actual API URL
+
+function convertToSnakeCase(invoice: Invoice): any {
+  return {
+    invoice_number: invoice.invoiceNumber,
+    date: invoice.date,
+    due_date: invoice.dueDate,
+    from: invoice.from,
+    to: invoice.to,
+    items_attributes: invoice.items.map(item => ({
+      // id: item.id,
+      quantity: item.quantity,
+      price: item.price,
+      amount: item.amount,
+      description: item.description
+    })),
+    notes: invoice.notes,
+    template: invoice.template,
+    invoice_type: invoice.invoiceType, 
+    template_config: invoice.templateConfig 
+  };
+}
 
 export async function saveInvoice(invoice: Invoice): Promise<{ success: boolean; message: string }> {
-  console.log(invoice);
+  console.log("Before conversion:", invoice);
+  const transformedInvoice = convertToSnakeCase(invoice);
+  console.log("After conversion:", transformedInvoice);
+
   
   try {
     const response = await fetch(`${API_BASE_URL}/invoices`, {
@@ -18,7 +42,7 @@ export async function saveInvoice(invoice: Invoice): Promise<{ success: boolean;
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(invoice),
+      body: JSON.stringify({ invoice: transformedInvoice }),
     });
 
     if (!response.ok) {
