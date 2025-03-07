@@ -11,14 +11,13 @@ const API_BASE_URL = 'http://localhost:3000/api'; // Replace with your actual AP
 
 function convertToSnakeCase(invoice: Invoice): any {
   return {
-    id: invoice.id,
     invoice_number: invoice.invoiceNumber,
     date: invoice.date,
     due_date: invoice.dueDate,
     from: invoice.from,
     to: invoice.to,
-    items: invoice.items.map(item => ({
-      id: item.id,
+    items_attributes: invoice.items.map(item => ({
+      // id: item.id,
       quantity: item.quantity,
       price: item.price,
       amount: item.amount,
