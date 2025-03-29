@@ -80,6 +80,30 @@ export interface Invoice {
   templateConfig: string; // Reference to template config ID
 }
 
+export interface InvoiceTemplateData {
+  invoiceNumber: string;
+  date: string;
+  dueDate: string;
+  from: {
+    name: string;
+    email: string;
+    address: string;
+  };
+  to: {
+    name: string;
+    email: string;
+    address: string;
+  };
+  items: Array<{
+    description: string;
+    quantity: number;
+    price: number;
+    amount: number;
+  }>;
+  total: number;
+  notes?: string;
+}
+
 export const defaultInvoice: Invoice = {
   id: '1',
   invoiceNumber: 'INV-001',

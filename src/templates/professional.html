@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Invoice</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      margin: 0;
+      padding: 40px;
+      color: #333;
+    }
+    .invoice-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 4px solid #1a1a1a;
+    }
+    .invoice-title {
+      font-size: 36px;
+      font-weight: bold;
+      color: #1a1a1a;
+      margin: 0;
+    }
+    .invoice-number {
+      color: #666;
+      font-size: 18px;
+      margin-top: 8px;
+    }
+    .dates {
+      text-align: right;
+      color: #666;
+    }
+    .dates p {
+      margin: 4px 0;
+    }
+    .addresses {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .address h2 {
+      font-size: 20px;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+    }
+    .address p {
+      margin: 4px 0;
+      color: #666;
+    }
+    .address p:first-of-type {
+      color: #1a1a1a;
+      font-weight: 500;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 40px;
+    }
+    th {
+      text-align: left;
+      padding: 12px;
+      background: #1a1a1a;
+      color: white;
+      font-weight: 500;
+    }
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .amount {
+      text-align: right;
+    }
+    .total {
+      text-align: right;
+      font-weight: bold;
+      border-top: 2px solid #1a1a1a;
+    }
+    .notes {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px solid #eee;
+    }
+    .notes h2 {
+      font-size: 20px;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+    .notes p {
+      color: #666;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <div class="invoice-container">
+    <div class="header">
+      <div>
+        <h1 class="invoice-title">INVOICE</h1>
+        <p class="invoice-number">#{{invoiceNumber}}</p>
+      </div>
+      <div class="dates">
+        <p><span style="font-weight: 500;">Date:</span> {{date}}</p>
+        <p><span style="font-weight: 500;">Due Date:</span> {{dueDate}}</p>
+      </div>
+    </div>
+
+    <div class="addresses">
+      <div class="address">
+        <h2>From</h2>
+        <p>{{from.name}}</p>
+        <p>{{from.email}}</p>
+        <p>{{from.address}}</p>
+      </div>
+      <div class="address">
+        <h2>Bill To</h2>
+        <p>{{to.name}}</p>
+        <p>{{to.email}}</p>
+        <p>{{to.address}}</p>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#items}}
+        <tr>
+          <td>{{description}}</td>
+          <td>{{quantity}}</td>
+          <td class="amount">${{price}}</td>
+          <td class="amount">${{amount}}</td>
+        </tr>
+        {{/items}}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" class="total">Total:</td>
+          <td class="total">${{total}}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    {{#notes}}
+    <div class="notes">
+      <h2>Notes</h2>
+      <p>{{notes}}</p>
+    </div>
+    {{/notes}}
+  </div>
+</body>
+</html> 
