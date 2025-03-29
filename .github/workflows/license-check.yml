@@ -8,4 +8,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Verify Headers
         run: |
-          grep -L "AGPL-3.0 License" $(find src -name '*.tsx') && exit 1 || exit 0 
+          # Check TypeScript and React files
+          grep -L "AGPL-3.0 License" $(find src -type f \( -name "*.ts" -o -name "*.tsx" \)) && exit 1 || exit 0
+          
+          # Check HTML template files
+          grep -L "AGPL-3.0 License" $(find src/templates -name "*.html") && exit 1 || exit 0 
