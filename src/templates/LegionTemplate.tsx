@@ -37,7 +37,7 @@ export default function LegionTemplate({ invoice }: { invoice: Invoice }) {
         </div>
         <div className="text-right">
           <h3 className="font-bold text-lg mb-2">Service Period:</h3>
-          <p className="text-gray-600">{invoice.items[0]?.fields.period || 'N/A'}</p>
+          <p className="text-gray-600">{invoice.items[0]?.fields?.period || 'N/A'}</p>
         </div>
       </div>
 
@@ -54,7 +54,7 @@ export default function LegionTemplate({ invoice }: { invoice: Invoice }) {
           {invoice.items.map((item) => (
             <tr key={item.id} className="border-b">
               <td className="py-3 px-4">{item.description}</td>
-              <td className="py-3 px-4 text-center">{item.fields.period}</td>
+              <td className="py-3 px-4 text-center">{item.fields?.period}</td>
               <td className="py-3 px-4 text-right">${(item.amount || 0).toFixed(2)}</td>
             </tr>
           ))}
