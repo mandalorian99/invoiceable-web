@@ -9,6 +9,7 @@ import { Invoice } from '../types/invoice';
 
 export default function MinimalTemplate({ invoice }: { invoice: Invoice }) {
   const total = invoice.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
+  const currencySymbol = invoice.currency || '$';
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white font-mono">
@@ -58,15 +59,15 @@ export default function MinimalTemplate({ invoice }: { invoice: Invoice }) {
               <tr key={item.id} className="border-b">
                 <td className="py-2">{item.description}</td>
                 <td className="py-2 text-right">{item.quantity}</td>
-                <td className="py-2 text-right">${item.price.toFixed(2)}</td>
-                <td className="py-2 text-right">${(item.quantity * item.price).toFixed(2)}</td>
+                <td className="py-2 text-right">{currencySymbol}{item.price.toFixed(2)}</td>
+                <td className="py-2 text-right">{currencySymbol}{(item.quantity * item.price).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
           <tfoot>
             <tr className="border-t border-black">
               <td colSpan={3} className="py-4 text-right">Total:</td>
-              <td className="py-4 text-right">${total.toFixed(2)}</td>
+              <td className="py-4 text-right">{currencySymbol}{total.toFixed(2)}</td>
             </tr>
           </tfoot>
         </table>

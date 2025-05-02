@@ -9,6 +9,7 @@ import { Invoice } from '../types/invoice';
 
 export default function ProfessionalTemplate({ invoice }: { invoice: Invoice }) {
   const total = invoice.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
+  const currencySymbol = invoice.currency || '$';
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white">
@@ -64,15 +65,15 @@ export default function ProfessionalTemplate({ invoice }: { invoice: Invoice }) 
               >
                 <td className="py-4 px-6">{item.description}</td>
                 <td className="py-4 px-6 text-right">{item.quantity}</td>
-                <td className="py-4 px-6 text-right">${item.price.toFixed(2)}</td>
-                <td className="py-4 px-6 text-right">${(item.quantity * item.price).toFixed(2)}</td>
+                <td className="py-4 px-6 text-right">{currencySymbol}{item.price.toFixed(2)}</td>
+                <td className="py-4 px-6 text-right">{currencySymbol}{(item.quantity * item.price).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
           <tfoot>
             <tr className="border-t-2 border-gray-900">
               <td colSpan={3} className="py-6 px-6 text-right font-bold text-gray-900">Total:</td>
-              <td className="py-6 px-6 text-right font-bold text-gray-900">${total.toFixed(2)}</td>
+              <td className="py-6 px-6 text-right font-bold text-gray-900">{currencySymbol}{total.toFixed(2)}</td>
             </tr>
           </tfoot>
         </table>
