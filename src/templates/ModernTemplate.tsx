@@ -16,7 +16,8 @@ export default function ModernTemplate({ invoice }: { invoice: Invoice }) {
     : 0;
   
   // Calculate total including taxes
-  const total = subtotal + taxAmount;
+  const total = invoice.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
+  const currencySymbol = invoice.currency || '$';
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white">
@@ -64,8 +65,9 @@ export default function ModernTemplate({ invoice }: { invoice: Invoice }) {
             <tr key={item.id} className="border-b border-gray-200">
               <td className="py-4">{item.description}</td>
               <td className="py-4 text-right">{item.quantity}</td>
-              <td className="py-4 text-right">${item.price.toFixed(2)}</td>
-              <td className="py-4 text-right">${(item.amount || (item.quantity * item.price)).toFixed(2)}</td>
+              <td className="py-4 text-right">{currencySymbol}{item.price.toFixed(2)}</td>
+              <td className="py-4 text-right">{currencySymbol}{(item.amount || (item.quantity * item.price)).toFixed(2)}</td>
+            </tr>
             </tr>
           ))}
         </tbody>
@@ -81,13 +83,13 @@ export default function ModernTemplate({ invoice }: { invoice: Invoice }) {
               <td colSpan={3} className="py-2 text-right text-gray-600">
                 {tax.name} ({tax.isPercentage ? `${tax.rate}%` : '$' + tax.rate}):
               </td>
-              <td className="py-2 text-right text-gray-600">${tax.amount.toFixed(2)}</td>
+              <td className="py-2 text-right text-gray-600">{currencySymbol}{tax.amount.toFixed(2)}</td>
             </tr>
           ))}
           
           <tr>
             <td colSpan={3} className="py-4 text-right font-bold text-lg">Total:</td>
-            <td className="py-4 text-right font-bold text-lg">${total.toFixed(2)}</td>
+            <td className="py-4 text-right font-bold text-lg">{currencySymbol}{total.toFixed(2)}</td>
           </tr>
         </tfoot>
       </table>

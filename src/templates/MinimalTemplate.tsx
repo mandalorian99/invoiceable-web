@@ -16,7 +16,8 @@ export default function MinimalTemplate({ invoice }: { invoice: Invoice }) {
     : 0;
   
   // Calculate total including taxes
-  const total = subtotal + taxAmount;
+  const total = invoice.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
+  const currencySymbol = invoice.currency || '$';
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white font-mono">
@@ -66,8 +67,8 @@ export default function MinimalTemplate({ invoice }: { invoice: Invoice }) {
               <tr key={item.id} className="border-b">
                 <td className="py-2">{item.description}</td>
                 <td className="py-2 text-right">{item.quantity}</td>
-                <td className="py-2 text-right">${item.price.toFixed(2)}</td>
-                <td className="py-2 text-right">${(item.amount || (item.quantity * item.price)).toFixed(2)}</td>
+                <td className="py-2 text-right">{currencySymbol}{item.price.toFixed(2)}</td>
+                <td className="py-2 text-right">{currencySymbol}{(item.amount || (item.quantity * item.price)).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
@@ -89,7 +90,7 @@ export default function MinimalTemplate({ invoice }: { invoice: Invoice }) {
             
             <tr className="border-t border-black">
               <td colSpan={3} className="py-4 text-right font-bold">Total:</td>
-              <td className="py-4 text-right font-bold">${total.toFixed(2)}</td>
+              <td className="py-4 text-right font-bold">{currencySymbol}{total.toFixed(2)}</td>
             </tr>
           </tfoot>
         </table>

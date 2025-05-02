@@ -16,7 +16,8 @@ export default function FreelancerTemplate({ invoice }: { invoice: Invoice }) {
     : 0;
   
   // Calculate total including taxes
-  const total = subtotal + taxAmount;
+  const total = invoice.items.reduce((sum, item) => sum + (item.rate * item.hours), 0);
+  const currencySymbol = invoice.currency || '$'; // Default to $ if currency not set
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white font-sans">
@@ -66,9 +67,9 @@ export default function FreelancerTemplate({ invoice }: { invoice: Invoice }) {
             {invoice.items.map((item) => (
               <tr key={item.id} className="border-b border-gray-100">
                 <td className="py-3 px-4">{item.description}</td>
-                <td className="py-3 px-4 text-right">${item.rate?.toFixed(2)}/hr</td>
+                <td className="py-3 px-4 text-right">{currencySymbol}{item.rate?.toFixed(2)}/hr</td>
                 <td className="py-3 px-4 text-right">{item.hours?.toFixed(1)}</td>
-                <td className="py-3 px-4 text-right">${(item.amount || (item.rate * item.hours) || 0).toFixed(2)}</td>
+                <td className="py-3 px-4 text-right">{currencySymbol}{(item.amount || (item.rate * item.hours) || 0).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
@@ -90,7 +91,7 @@ export default function FreelancerTemplate({ invoice }: { invoice: Invoice }) {
             
             <tr className="bg-gray-50">
               <td colSpan={3} className="py-4 px-4 text-right font-semibold">Total Due:</td>
-              <td className="py-4 px-4 text-right font-semibold">${total.toFixed(2)}</td>
+              <td className="py-4 px-4 text-right font-semibold">{currencySymbol}{total.toFixed(2)}</td>
             </tr>
           </tfoot>
         </table>

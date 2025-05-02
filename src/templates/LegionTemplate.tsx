@@ -17,7 +17,8 @@ export default function LegionTemplate({ invoice }: { invoice: Invoice }) {
     : 0;
   
   // Calculate total including taxes
-  const total = subtotal + taxAmount;
+  const total = invoice.items.reduce((sum, item) => sum + (item.amount || 0), 0);
+  const currencySymbol = invoice.currency || '$';
 
   return (
     <div className="font-sans p-8 bg-white">
@@ -63,7 +64,7 @@ export default function LegionTemplate({ invoice }: { invoice: Invoice }) {
             <tr key={item.id} className="border-b">
               <td className="py-3 px-4">{item.description}</td>
               <td className="py-3 px-4 text-center">{item.period}</td>
-              <td className="py-3 px-4 text-right">${(item.amount || 0).toFixed(2)}</td>
+              <td className="py-3 px-4 text-right">{currencySymbol}{(item.amount || 0).toFixed(2)}</td>
             </tr>
           ))}
         </tbody>
@@ -85,7 +86,7 @@ export default function LegionTemplate({ invoice }: { invoice: Invoice }) {
           
           <tr className="bg-gray-50">
             <td colSpan={2} className="py-3 px-4 text-right font-bold">TOTAL:</td>
-            <td className="py-3 px-4 text-right font-bold">${total.toFixed(2)}</td>
+            <td className="py-3 px-4 text-right font-bold">{currencySymbol}{total.toFixed(2)}</td>
           </tr>
         </tfoot>
       </table>

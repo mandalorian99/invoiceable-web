@@ -26,8 +26,6 @@ const InvoicePreview = forwardRef<HTMLDivElement, Props>(({ invoice }, ref) => {
     legion: LegionTemplate
   };
 
-  // Rendering the template based on the invoice templates
-  // templates path: src/templates/LegionTemplate.tsx
   const TemplateComponent = templates[invoice.template];
 
   return (

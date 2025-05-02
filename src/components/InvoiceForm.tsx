@@ -11,6 +11,7 @@ import { TEMPLATE_CONFIGS } from '../config/templates';
 import { useState, useEffect } from 'react';
 import TemplateSelector from './TemplateSelector';
 import InvoiceItems from './InvoiceItems';
+import CurrencySelector from './CurrencySelector';
 
 interface Props {
   invoice: Invoice;
@@ -226,6 +227,11 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
               value={invoice.invoiceNumber}
               onChange={(e) => onInvoiceChange({ ...invoice, invoiceNumber: e.target.value })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+            <CurrencySelector
+              value={invoice.currency}
+              onChange={(currencyCode) => onInvoiceChange({ ...invoice, currency: currencyCode })}
+              className="mt-4"
             />
           </div>
           <div>
