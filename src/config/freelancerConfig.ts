@@ -69,6 +69,34 @@ export const freelancerConfig: InvoiceTemplateConfig = {
 
   defaultNotes: 'Payment terms: Net 15 days\nLate payment fee: 1.5% monthly interest',
 
+  // Tax configuration
+  taxes: {
+    enabled: true,
+    types: [
+      {
+        id: 'freelanceTax',
+        name: 'Freelance Tax',
+        description: 'Tax for freelance services',
+        defaultRate: 15,
+        isPercentage: true
+      },
+      {
+        id: 'vat',
+        name: 'VAT',
+        description: 'Value Added Tax',
+        defaultRate: 20,
+        isPercentage: true
+      },
+      {
+        id: 'custom',
+        name: 'Custom Tax',
+        description: 'User-defined tax',
+        defaultRate: 0,
+        isPercentage: true
+      }
+    ]
+  },
+
   meta: {
     accentColor: '#2d3748',
     preferredUnits: 'hours',

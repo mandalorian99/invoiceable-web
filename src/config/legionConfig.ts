@@ -56,6 +56,34 @@ export const legionConfig: InvoiceTemplateConfig = {
       }
     ]
   },
+  
+  // Tax configuration
+  taxes: {
+    enabled: true,
+    types: [
+      {
+        id: 'incomeTax',
+        name: 'Income Tax',
+        description: 'Income tax for contract work',
+        defaultRate: 10,
+        isPercentage: true
+      },
+      {
+        id: 'localTax',
+        name: 'Local Tax',
+        description: 'Local municipality tax',
+        defaultRate: 5,
+        isPercentage: true
+      },
+      {
+        id: 'custom',
+        name: 'Custom Tax',
+        description: 'User-defined tax',
+        defaultRate: 0,
+        isPercentage: true
+      }
+    ]
+  },
 
   meta: {
     billingInterval: 15,

@@ -62,6 +62,41 @@ export const modernConfig: InvoiceTemplateConfig = {
   
   defaultNotes: 'Thank you for your business!',
   
+  // Tax configuration
+  taxes: {
+    enabled: true,
+    types: [
+      {
+        id: 'vat',
+        name: 'VAT',
+        description: 'Value Added Tax',
+        defaultRate: 20,
+        isPercentage: true
+      },
+      {
+        id: 'sales',
+        name: 'Sales Tax',
+        description: 'Standard sales tax',
+        defaultRate: 7.5,
+        isPercentage: true
+      },
+      {
+        id: 'gst',
+        name: 'GST',
+        description: 'Goods and Services Tax',
+        defaultRate: 5,
+        isPercentage: true
+      },
+      {
+        id: 'custom',
+        name: 'Custom Tax',
+        description: 'User-defined tax',
+        defaultRate: 0,
+        isPercentage: true
+      }
+    ]
+  },
+  
   // Extensible metadata
   meta: {
     accentColor: '#2563eb',

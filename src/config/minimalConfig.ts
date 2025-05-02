@@ -63,6 +63,34 @@ export const minimalConfig: InvoiceTemplateConfig = {
   
   defaultNotes: 'Payment due within 30 days',
   
+  // Tax configuration
+  taxes: {
+    enabled: true,
+    types: [
+      {
+        id: 'vat',
+        name: 'VAT',
+        description: 'Value Added Tax',
+        defaultRate: 20,
+        isPercentage: true
+      },
+      {
+        id: 'sales',
+        name: 'Sales Tax',
+        description: 'Standard sales tax',
+        defaultRate: 7.5,
+        isPercentage: true
+      },
+      {
+        id: 'custom',
+        name: 'Custom Tax',
+        description: 'User-defined tax',
+        defaultRate: 0,
+        isPercentage: true
+      }
+    ]
+  },
+  
   meta: {
     accentColor: '#4a5568',
     layoutType: 'compact'

@@ -63,6 +63,41 @@ export const professionalConfig: InvoiceTemplateConfig = {
   
   defaultNotes: 'Terms: Net 30 days. Late fees may apply.',
   
+  // Tax configuration
+  taxes: {
+    enabled: true,
+    types: [
+      {
+        id: 'vat',
+        name: 'VAT',
+        description: 'Value Added Tax',
+        defaultRate: 20,
+        isPercentage: true
+      },
+      {
+        id: 'gst',
+        name: 'GST',
+        description: 'Goods and Services Tax',
+        defaultRate: 5,
+        isPercentage: true
+      },
+      {
+        id: 'servicesTax',
+        name: 'Services Tax',
+        description: 'Tax on services',
+        defaultRate: 10,
+        isPercentage: true
+      },
+      {
+        id: 'custom',
+        name: 'Custom Tax',
+        description: 'User-defined tax',
+        defaultRate: 0,
+        isPercentage: true
+      }
+    ]
+  },
+  
   meta: {
     accentColor: '#1a365d',
     layoutType: 'detailed',

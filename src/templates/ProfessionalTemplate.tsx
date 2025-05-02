@@ -8,7 +8,15 @@
 import { Invoice } from '../types/invoice';
 
 export default function ProfessionalTemplate({ invoice }: { invoice: Invoice }) {
-  const total = invoice.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
+  const subtotal = invoice.items.reduce((sum, item) => sum + (item.amount || 0), 0);
+  
+  // Calculate tax amount if taxes are enabled
+  const taxAmount = invoice.taxEnabled && invoice.taxes 
+    ? invoice.taxes.reduce((sum, tax) => sum + (tax.enabled ? tax.amount : 0), 0) 
+    : 0;
+  
+  // Calculate total including taxes
+  const total = subtotal + taxAmount;
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white">
@@ -65,11 +73,26 @@ export default function ProfessionalTemplate({ invoice }: { invoice: Invoice }) 
                 <td className="py-4 px-6">{item.description}</td>
                 <td className="py-4 px-6 text-right">{item.quantity}</td>
                 <td className="py-4 px-6 text-right">${item.price.toFixed(2)}</td>
-                <td className="py-4 px-6 text-right">${(item.quantity * item.price).toFixed(2)}</td>
+                <td className="py-4 px-6 text-right">${(item.amount || (item.quantity * item.price)).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
           <tfoot>
+            <tr className="border-t border-gray-300">
+              <td colSpan={3} className="py-4 px-6 text-right font-semibold text-gray-900">Subtotal:</td>
+              <td className="py-4 px-6 text-right font-semibold text-gray-900">${subtotal.toFixed(2)}</td>
+            </tr>
+            
+            {/* Display taxes if enabled */}
+            {invoice.taxEnabled && invoice.taxes && invoice.taxes.filter(tax => tax.enabled).map(tax => (
+              <tr key={tax.id}>
+                <td colSpan={3} className="py-3 px-6 text-right text-gray-700">
+                  {tax.name} ({tax.isPercentage ? `${tax.rate}%` : '$' + tax.rate}):
+                </td>
+                <td className="py-3 px-6 text-right text-gray-700">${tax.amount.toFixed(2)}</td>
+              </tr>
+            ))}
+            
             <tr className="border-t-2 border-gray-900">
               <td colSpan={3} className="py-6 px-6 text-right font-bold text-gray-900">Total:</td>
               <td className="py-6 px-6 text-right font-bold text-gray-900">${total.toFixed(2)}</td>
