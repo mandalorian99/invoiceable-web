@@ -22,6 +22,30 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
     try {
       setIsLoading(true);
 
+      // Calculate subtotal based on item types
+      let subtotal = 0;
+      
+      if (invoice.template === 'freelancer') {
+        // Freelancer template uses rate and hours
+        subtotal = invoice.items.reduce((sum, item) => 
+          sum + (item.amount || (item.rate * item.hours) || 0), 0);
+      } else if (invoice.template === 'legion') {
+        // Legion template has a direct amount
+        subtotal = invoice.items.reduce((sum, item) => 
+          sum + (item.amount || 0), 0);
+      } else {
+        // Other templates use quantity and price
+        subtotal = invoice.items.reduce((sum, item) => 
+          sum + (item.amount || (item.quantity * item.price) || 0), 0);
+      }
+
+      // Calculate total including taxes if enabled
+      const taxAmount = invoice.taxEnabled && invoice.taxes 
+        ? invoice.taxes.reduce((sum, tax) => sum + (tax.enabled ? tax.amount : 0), 0) 
+        : 0;
+      
+      const total = subtotal + taxAmount;
+
       // Prepare data for the template
       const data = {
         invoiceNumber: invoice.invoiceNumber,
@@ -37,13 +61,30 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
           email: invoice.to.email,
           address: invoice.to.address
         },
-        items: invoice.items.map(item => ({
-          description: item.description,
-          quantity: item.quantity,
-          price: item.price,
-          amount: item.quantity * item.price
-        })),
-        total: invoice.items.reduce((sum, item) => sum + (item.quantity * item.price), 0),
+        items: invoice.items.map(item => {
+          // Create a base item with common properties
+          const exportItem: any = {
+            description: item.description,
+            amount: item.amount || 0
+          };
+
+          // Add template-specific properties
+          if (invoice.template === 'freelancer') {
+            exportItem.rate = item.rate || 0;
+            exportItem.hours = item.hours || 0;
+          } else if (invoice.template === 'legion') {
+            exportItem.period = item.period || '';
+          } else {
+            exportItem.quantity = item.quantity || 0;
+            exportItem.price = item.price || 0;
+          }
+
+          return exportItem;
+        }),
+        subtotal: subtotal,
+        total: total,
+        taxes: invoice.taxes,
+        taxEnabled: invoice.taxEnabled,
         notes: invoice.notes
       };
 
