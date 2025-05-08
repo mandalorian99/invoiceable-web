@@ -91,6 +91,23 @@
     tfoot td {
       font-weight: 600;
     }
+    .subtotal {
+      text-align: right;
+      border-top: 1px solid #f3f4f6;
+    }
+    .tax-row {
+      background-color: transparent !important;
+    }
+    .tax-row td {
+      padding: 6px 16px;
+      font-weight: normal;
+      border-bottom: none;
+      color: #6b7280;
+    }
+    .total {
+      font-weight: 700;
+      background-color: #f3f4f6;
+    }
     .notes {
       margin-top: 32px;
       padding-top: 24px;
@@ -158,6 +175,22 @@
       </tbody>
       <tfoot>
         <tr>
+          <td colspan="3" class="amount subtotal">Subtotal:</td>
+          <td class="amount subtotal">${{subtotal}}</td>
+        </tr>
+        
+        {{#taxEnabled}}
+          {{#taxes}}
+            {{#enabled}}
+            <tr class="tax-row">
+              <td colspan="3" class="amount">{{name}} ({{#isPercentage}}{{rate}}%{{/isPercentage}}{{^isPercentage}}${{rate}}{{/isPercentage}}):</td>
+              <td class="amount">${{amount}}</td>
+            </tr>
+            {{/enabled}}
+          {{/taxes}}
+        {{/taxEnabled}}
+        
+        <tr class="total">
           <td colspan="3" class="amount">Total Due:</td>
           <td class="amount">${{total}}</td>
         </tr>
