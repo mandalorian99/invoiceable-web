@@ -11,6 +11,7 @@ import { minimalConfig } from './minimalConfig';
 import { professionalConfig } from './professionalConfig';
 import { legionConfig } from './legionConfig';
 import { freelancerConfig } from './freelancerConfig';
+
 export const TEMPLATE_CONFIGS: Record<string, InvoiceTemplateConfig> = {
   modern: modernConfig,
   minimal: minimalConfig,
