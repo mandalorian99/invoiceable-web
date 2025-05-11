@@ -50,6 +50,11 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
         invoice.taxes?.filter(t => t.enabled) || []
       );
 
+      // Add null check for tax calculation
+      if (!taxCalculation) {
+        throw new Error('Tax calculation method missing for template');
+      }
+
       // Prepare data for the template
       const data = {
         invoiceNumber: invoice.invoiceNumber,

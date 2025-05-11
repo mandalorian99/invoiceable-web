@@ -75,20 +75,12 @@ export const freelancerConfig: InvoiceTemplateConfig = {
     enabled: true,
     config: {
       taxCalculation: (subtotal, selectedTaxes) => {
-        let taxAmount = 0;
-        const calculatedTaxes = selectedTaxes.map(tax => {
-          const amount = tax.isPercentage 
-            ? subtotal * (tax.rate / 100)
-            : tax.rate;
-            
-          taxAmount += amount;
-          return { ...tax, amount };
-        });
-
+        const taxAmount = selectedTaxes.reduce((sum, tax) => 
+          sum + (tax.isPercentage ? (subtotal * tax.rate / 100) : tax.rate), 0);
         return {
           taxAmount,
           total: subtotal + taxAmount,
-          taxes: calculatedTaxes
+          taxes: selectedTaxes
         };
       },
       availableTaxes: getAvailableTaxesForTemplate('freelancer')
