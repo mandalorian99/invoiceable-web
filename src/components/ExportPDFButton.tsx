@@ -10,6 +10,8 @@ import React, { useState } from 'react';
 import Button from './ui/Button';
 import { generatePDF } from '../utils/pdfGenerator';
 import { Invoice } from '../types/invoice';
+import { TEMPLATE_CONFIGS } from '../config/invoiceTemplates';
+import { TAX_TYPES } from '../config/taxConfig';
 
 interface ExportPDFButtonProps {
   invoice: Invoice;
@@ -21,6 +23,9 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
   const handleExport = async () => {
     try {
       setIsLoading(true);
+
+      // Get template config
+      const templateConfig = TEMPLATE_CONFIGS[invoice.template];
 
       // Calculate subtotal based on item types
       let subtotal = 0;
@@ -39,12 +44,11 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
           sum + (item.amount || (item.quantity * item.price) || 0), 0);
       }
 
-      // Calculate total including taxes if enabled
-      const taxAmount = invoice.taxEnabled && invoice.taxes 
-        ? invoice.taxes.reduce((sum, tax) => sum + (tax.enabled ? tax.amount : 0), 0) 
-        : 0;
-      
-      const total = subtotal + taxAmount;
+      // Calculate taxes using template's method
+      const taxCalculation = templateConfig.taxes.config.taxCalculation(
+        subtotal,
+        invoice.taxes?.filter(t => t.enabled) || []
+      );
 
       // Prepare data for the template
       const data = {
@@ -64,7 +68,7 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
         items: invoice.items.map(item => {
           // Create a base item with common properties
           const exportItem: any = {
-            description: item.description,
+          description: item.description,
             amount: item.amount || 0
           };
 
@@ -81,10 +85,24 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
 
           return exportItem;
         }),
-        subtotal: subtotal,
-        total: total,
-        taxes: invoice.taxes,
-        taxEnabled: invoice.taxEnabled,
+        subtotal,
+        total: taxCalculation.total,
+        taxes: taxCalculation.taxes.map(tax => {
+          const taxType = TAX_TYPES.find(t => t.id === tax.id) || {
+            name: 'Tax',
+            description: '',
+            defaultRate: 0,
+            isPercentage: true
+          };
+          
+          return {
+            ...tax,
+            name: taxType.name,
+            description: taxType.description,
+            amount: tax.amount || 0
+          };
+        }),
+        taxEnabled: templateConfig.taxes.enabled,
         notes: invoice.notes
       };
 

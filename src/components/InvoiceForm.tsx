@@ -23,23 +23,26 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
   // Initialize taxes from template if available
   useEffect(() => {
     const templateConfig = TEMPLATE_CONFIGS[invoice.template];
-    if (templateConfig?.taxes?.enabled && (!invoice.taxes || invoice.taxes.length === 0)) {
-      const initialTaxes = templateConfig.taxes.types.map(tax => ({
-        id: tax.id,
-        name: tax.name,
-        rate: tax.defaultRate,
-        isPercentage: tax.isPercentage,
-        amount: 0,
-        enabled: tax.id === 'vat' // Enable VAT by default
-      }));
-      
-      onInvoiceChange({
-        ...invoice,
-        taxes: initialTaxes,
-        taxEnabled: true
-      });
+    // Always reset taxes when template changes
+    const initialTaxes = templateConfig.taxes.config.availableTaxes.map(tax => ({
+      id: tax.id,
+      name: tax.name,
+      rate: tax.defaultRate,
+      isPercentage: tax.isPercentage,
+      amount: 0,
+      enabled: false
+    })) || [];
+    
+    if (initialTaxes.length > 0) {
+      initialTaxes[0].enabled = true;
     }
-  }, [invoice.template]);
+    
+    onInvoiceChange({
+      ...invoice,
+      taxes: initialTaxes,
+      taxEnabled: templateConfig.taxes.enabled
+    });
+  }, [invoice.template]); // Trigger only on template change
 
   // Calculate tax amounts whenever items change
   useEffect(() => {
@@ -185,13 +188,33 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
   const currentTemplate = TEMPLATE_CONFIGS[invoice.template];
   const taxesEnabled = currentTemplate?.taxes?.enabled;
 
+  const handleTemplateChange = (templateId: keyof typeof TEMPLATE_CONFIGS) => {
+    const newConfig = TEMPLATE_CONFIGS[templateId];
+    
+    onInvoiceChange({
+      ...invoice,
+      template: templateId,
+      from: invoice.from,
+      to: invoice.to,
+      taxes: newConfig.taxes.config.availableTaxes.map(tax => ({
+        id: tax.id,
+        name: tax.name,
+        rate: tax.defaultRate,
+        isPercentage: tax.isPercentage,
+        amount: 0,
+        enabled: tax.id === 'vat' // Or your default logic
+      })),
+      taxEnabled: newConfig.taxes.enabled
+    });
+  };
+
   return (
     <div className="bg-white p-6 pb-20">
       <div className="space-y-6">
         <TemplateSelector
           selectedTemplate={invoice.template}
           templates={Object.values(TEMPLATE_CONFIGS)}
-          onSelect={(templateId) => onInvoiceChange({ ...invoice, template: templateId as any })}
+          onSelect={handleTemplateChange}
         />
 
         {/* Invoice Details */}

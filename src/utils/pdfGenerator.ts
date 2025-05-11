@@ -44,11 +44,12 @@ export const generatePDF = async (data: InvoiceTemplateData, templateStyle: stri
     }
 
     // Ensure tax data is properly formatted
-    if (formattedData.taxEnabled && formattedData.taxes) {
-      formattedData.taxes = formattedData.taxes.map(tax => ({
+    if (data.taxEnabled && data.taxes) {
+      formattedData.taxes = data.taxes.map(tax => ({
         ...tax,
         amount: tax.amount || 0,
-        rate: tax.rate || 0
+        rate: tax.rate || 0,
+        isPercentage: tax.isPercentage
       }));
     }
 

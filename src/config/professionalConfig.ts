@@ -6,6 +6,7 @@
  * https://github.com/mandalorian99/invoiceable-web
  */
 import { InvoiceTemplateConfig } from '../types/invoice';
+import { getAvailableTaxesForTemplate } from './taxConfig';
 
 export const professionalConfig: InvoiceTemplateConfig = {
   id: 'professional',
@@ -66,36 +67,20 @@ export const professionalConfig: InvoiceTemplateConfig = {
   // Tax configuration
   taxes: {
     enabled: true,
-    types: [
-      {
-        id: 'vat',
-        name: 'VAT',
-        description: 'Value Added Tax',
-        defaultRate: 20,
-        isPercentage: true
-      },
-      {
-        id: 'gst',
-        name: 'GST',
-        description: 'Goods and Services Tax',
-        defaultRate: 5,
-        isPercentage: true
-      },
-      {
-        id: 'servicesTax',
-        name: 'Services Tax',
-        description: 'Tax on services',
-        defaultRate: 10,
-        isPercentage: true
-      },
-      {
-        id: 'custom',
-        name: 'Custom Tax',
-        description: 'User-defined tax',
-        defaultRate: 0,
-        isPercentage: true
+    config: {
+      availableTaxes: getAvailableTaxesForTemplate('professional'),
+      taxCalculation: (subtotal: number, selectedTaxes) => {
+        let taxAmount = 0;
+        const taxes = selectedTaxes.map(tax => {
+          const amount = tax.isPercentage 
+            ? subtotal * (tax.rate / 100)
+            : tax.rate;
+          taxAmount += amount;
+          return { ...tax, amount };
+        });
+        return { taxAmount, total: subtotal + taxAmount, taxes };
       }
-    ]
+    }
   },
   
   meta: {

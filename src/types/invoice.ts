@@ -24,8 +24,11 @@ export interface TaxType {
 
 // Tax configuration for template
 export interface TaxConfig {
+  id: string;
   enabled: boolean;
-  types: TaxType[];
+  rate: number;
+  isPercentage: boolean;
+  amount?: number;
 }
 
 export interface InvoiceTemplateConfig {
@@ -35,7 +38,17 @@ export interface InvoiceTemplateConfig {
   itemFields: ItemFieldConfig[];
   validationRules?: ValidationRules;
   defaultNotes?: string;
-  taxes?: TaxConfig;
+  taxes: {
+    enabled: boolean;
+    config: {
+      taxCalculation: (subtotal: number, selectedTaxes: TaxConfig[]) => {
+        taxAmount: number;
+        total: number;
+        taxes: TaxConfig[];
+      };
+      availableTaxes: TaxType[];
+    };
+  };
   meta?: Record<string, any>;
   previewImage: string;
   industry: 'general' | 'it' | 'construction' | 'healthcare' | 'legal' | 'freelance';

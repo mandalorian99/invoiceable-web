@@ -6,6 +6,7 @@
  * https://github.com/mandalorian99/invoiceable-web
  */
 import { InvoiceTemplateConfig } from '../types/invoice';
+import { TAX_TYPES, getAvailableTaxesForTemplate } from './taxConfig';
 
 export const freelancerConfig: InvoiceTemplateConfig = {
   id: 'freelancer',
@@ -72,29 +73,26 @@ export const freelancerConfig: InvoiceTemplateConfig = {
   // Tax configuration
   taxes: {
     enabled: true,
-    types: [
-      {
-        id: 'freelanceTax',
-        name: 'Freelance Tax',
-        description: 'Tax for freelance services',
-        defaultRate: 15,
-        isPercentage: true
+    config: {
+      taxCalculation: (subtotal, selectedTaxes) => {
+        let taxAmount = 0;
+        const calculatedTaxes = selectedTaxes.map(tax => {
+          const amount = tax.isPercentage 
+            ? subtotal * (tax.rate / 100)
+            : tax.rate;
+            
+          taxAmount += amount;
+          return { ...tax, amount };
+        });
+
+        return {
+          taxAmount,
+          total: subtotal + taxAmount,
+          taxes: calculatedTaxes
+        };
       },
-      {
-        id: 'vat',
-        name: 'VAT',
-        description: 'Value Added Tax',
-        defaultRate: 20,
-        isPercentage: true
-      },
-      {
-        id: 'custom',
-        name: 'Custom Tax',
-        description: 'User-defined tax',
-        defaultRate: 0,
-        isPercentage: true
-      }
-    ]
+      availableTaxes: getAvailableTaxesForTemplate('freelancer')
+    }
   },
 
   meta: {
