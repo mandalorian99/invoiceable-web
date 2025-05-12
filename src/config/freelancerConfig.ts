@@ -6,6 +6,7 @@
  * https://github.com/mandalorian99/invoiceable-web
  */
 import { InvoiceTemplateConfig } from '../types/invoice';
+import { TAX_TYPES, getAvailableTaxesForTemplate } from './taxConfig';
 
 export const freelancerConfig: InvoiceTemplateConfig = {
   id: 'freelancer',
@@ -68,6 +69,23 @@ export const freelancerConfig: InvoiceTemplateConfig = {
   },
 
   defaultNotes: 'Payment terms: Net 15 days\nLate payment fee: 1.5% monthly interest',
+
+  // Tax configuration
+  taxes: {
+    enabled: true,
+    config: {
+      taxCalculation: (subtotal, selectedTaxes) => {
+        const taxAmount = selectedTaxes.reduce((sum, tax) => 
+          sum + (tax.isPercentage ? (subtotal * tax.rate / 100) : tax.rate), 0);
+        return {
+          taxAmount,
+          total: subtotal + taxAmount,
+          taxes: selectedTaxes
+        };
+      },
+      availableTaxes: getAvailableTaxesForTemplate('freelancer')
+    }
+  },
 
   meta: {
     accentColor: '#2d3748',

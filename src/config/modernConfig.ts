@@ -6,6 +6,7 @@
  * https://github.com/mandalorian99/invoiceable-web
  */
 import { InvoiceTemplateConfig } from '../types/invoice';
+import { getAvailableTaxesForTemplate } from './taxConfig';
 
 export const modernConfig: InvoiceTemplateConfig = {
   id: 'modern',
@@ -61,6 +62,25 @@ export const modernConfig: InvoiceTemplateConfig = {
   },
   
   defaultNotes: 'Thank you for your business!',
+  
+  // Tax configuration
+  taxes: {
+    enabled: true,
+    config: {
+      availableTaxes: getAvailableTaxesForTemplate('modern'),
+      taxCalculation: (subtotal: number, selectedTaxes) => {
+        let taxAmount = 0;
+        const taxes = selectedTaxes.map(tax => {
+          const amount = tax.isPercentage 
+            ? subtotal * (tax.rate / 100)
+            : tax.rate;
+          taxAmount += amount;
+          return { ...tax, amount };
+        });
+        return { taxAmount, total: subtotal + taxAmount, taxes };
+      }
+    }
+  },
   
   // Extensible metadata
   meta: {

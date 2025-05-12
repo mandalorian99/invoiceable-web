@@ -71,9 +71,21 @@
     .amount {
       text-align: right;
     }
+    .subtotal {
+      text-align: right;
+    }
+    .tax-row td {
+      padding: 4px 8px;
+      border-bottom: none;
+    }
+    .tax-amount {
+      text-align: right;
+      color: #666;
+    }
     .total {
       text-align: right;
       border-top: 1px solid #000;
+      font-weight: bold;
     }
     .notes {
       margin-top: 40px;
@@ -128,6 +140,22 @@
         {{/items}}
       </tbody>
       <tfoot>
+        <tr>
+          <td colspan="3" class="subtotal">Subtotal:</td>
+          <td class="subtotal">${{subtotal}}</td>
+        </tr>
+        
+        {{#taxEnabled}}
+          {{#taxes}}
+            {{#enabled}}
+            <tr class="tax-row">
+              <td colspan="3" class="tax-amount">{{name}} ({{#isPercentage}}{{rate}}%{{/isPercentage}}{{^isPercentage}}${{rate}}{{/isPercentage}}):</td>
+              <td class="tax-amount">${{amount}}</td>
+            </tr>
+            {{/enabled}}
+          {{/taxes}}
+        {{/taxEnabled}}
+
         <tr>
           <td colspan="3" class="total">Total:</td>
           <td class="total">${{total}}</td>

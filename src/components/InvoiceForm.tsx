@@ -6,9 +6,9 @@
  * https://github.com/mandalorian99/invoiceable-web
  */
 // import { Plus, Trash2 } from 'lucide-react';
-import { Invoice, InvoiceItem } from '../types/invoice';
+import { Invoice, InvoiceItem, InvoiceTax } from '../types/invoice';
 import { TEMPLATE_CONFIGS } from '../config/templates';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TemplateSelector from './TemplateSelector';
 import InvoiceItems from './InvoiceItems';
 
@@ -19,6 +19,68 @@ interface Props {
 
 export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Initialize taxes from template if available
+  useEffect(() => {
+    const templateConfig = TEMPLATE_CONFIGS[invoice.template];
+    // Always reset taxes when template changes
+    const initialTaxes = templateConfig.taxes.config.availableTaxes.map(tax => ({
+      id: tax.id,
+      name: tax.name,
+      rate: tax.defaultRate,
+      isPercentage: tax.isPercentage,
+      amount: 0,
+      enabled: false
+    })) || [];
+    
+    if (initialTaxes.length > 0) {
+      initialTaxes[0].enabled = true;
+    }
+    
+    onInvoiceChange({
+      ...invoice,
+      taxes: initialTaxes,
+      taxEnabled: templateConfig.taxes.enabled
+    });
+  }, [invoice.template]); // Trigger only on template change
+
+  // Calculate tax amounts whenever items change
+  useEffect(() => {
+    if (invoice.taxes && invoice.taxEnabled) {
+      // Calculate subtotal based on template type
+      let subtotal = 0;
+      
+      // Different templates might use different item structures
+      if (invoice.template === 'freelancer') {
+        // Freelancer template uses rate and hours
+        subtotal = invoice.items.reduce((sum, item) => 
+          sum + (item.amount || (item.rate * item.hours) || 0), 0);
+      } else if (invoice.template === 'legion') {
+        // Legion template has a direct amount
+        subtotal = invoice.items.reduce((sum, item) => 
+          sum + (item.amount || 0), 0);
+      } else {
+        // Other templates use quantity and price
+        subtotal = invoice.items.reduce((sum, item) => 
+          sum + (item.amount || (item.quantity * item.price) || 0), 0);
+      }
+      
+      const updatedTaxes = invoice.taxes.map(tax => ({
+        ...tax,
+        amount: tax.enabled ? (tax.isPercentage ? (subtotal * tax.rate / 100) : tax.rate) : 0
+      }));
+      
+      onInvoiceChange({
+        ...invoice,
+        taxes: updatedTaxes
+      });
+    }
+  }, [
+    invoice.items, 
+    invoice.template,
+    invoice.taxes?.map(t => t.rate).join(','), 
+    invoice.taxes?.map(t => t.enabled).join(',')
+  ]);
 
   const addItem = () => {
     const templateConfig = TEMPLATE_CONFIGS[invoice.template];
@@ -68,13 +130,91 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
     onInvoiceChange({ ...invoice, items: updatedItems });
   };
 
+  // Toggle tax display
+  const toggleTax = (enabled: boolean) => {
+    onInvoiceChange({
+      ...invoice,
+      taxEnabled: enabled
+    });
+  };
+
+  // Update tax rate
+  const updateTaxRate = (taxId: string, rate: number) => {
+    if (!invoice.taxes) return;
+    
+    const updatedTaxes = invoice.taxes.map(tax => 
+      tax.id === taxId ? { ...tax, rate } : tax
+    );
+    
+    onInvoiceChange({
+      ...invoice,
+      taxes: updatedTaxes
+    });
+  };
+
+  // Toggle individual tax
+  const toggleTaxItem = (taxId: string, enabled: boolean) => {
+    if (!invoice.taxes) return;
+    
+    const updatedTaxes = invoice.taxes.map(tax => 
+      tax.id === taxId ? { ...tax, enabled } : tax
+    );
+    
+    onInvoiceChange({
+      ...invoice,
+      taxes: updatedTaxes
+    });
+  };
+
+  // Calculate subtotal
+  let subtotal = 0;
+  
+  // Different templates might use different item structures
+  if (invoice.template === 'freelancer') {
+    // Freelancer template uses rate and hours
+    subtotal = invoice.items.reduce((sum, item) => 
+      sum + (item.amount || (item.rate * item.hours) || 0), 0);
+  } else if (invoice.template === 'legion') {
+    // Legion template has a direct amount
+    subtotal = invoice.items.reduce((sum, item) => 
+      sum + (item.amount || 0), 0);
+  } else {
+    // Other templates use quantity and price
+    subtotal = invoice.items.reduce((sum, item) => 
+      sum + (item.amount || (item.quantity * item.price) || 0), 0);
+  }
+
+  // Get current template config
+  const currentTemplate = TEMPLATE_CONFIGS[invoice.template];
+  const taxesEnabled = currentTemplate?.taxes?.enabled;
+
+  const handleTemplateChange = (templateId: keyof typeof TEMPLATE_CONFIGS) => {
+    const newConfig = TEMPLATE_CONFIGS[templateId];
+    
+    onInvoiceChange({
+      ...invoice,
+      template: templateId,
+      from: invoice.from,
+      to: invoice.to,
+      taxes: newConfig.taxes.config.availableTaxes.map(tax => ({
+        id: tax.id,
+        name: tax.name,
+        rate: tax.defaultRate,
+        isPercentage: tax.isPercentage,
+        amount: 0,
+        enabled: tax.id === 'vat' // Or your default logic
+      })),
+      taxEnabled: newConfig.taxes.enabled
+    });
+  };
+
   return (
     <div className="bg-white p-6 pb-20">
       <div className="space-y-6">
         <TemplateSelector
           selectedTemplate={invoice.template}
           templates={Object.values(TEMPLATE_CONFIGS)}
-          onSelect={(templateId) => onInvoiceChange({ ...invoice, template: templateId })}
+          onSelect={handleTemplateChange}
         />
 
         {/* Invoice Details */}
@@ -186,6 +326,79 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
           onRemoveItem={removeItem}
           onUpdateItem={updateItem}
         />
+
+        {/* Tax Section */}
+        {taxesEnabled && (
+          <div className="pt-6 border-t border-gray-200">
+            <div className="flex items-center mb-4">
+              <h3 className="text-xl font-semibold text-gray-900 flex items-center mr-4">
+                <span className="mr-2">💲</span>
+                Taxes
+              </h3>
+              <label className="flex items-center cursor-pointer">
+                <div className="relative">
+                  <input 
+                    type="checkbox" 
+                    className="sr-only" 
+                    checked={invoice.taxEnabled}
+                    onChange={(e) => toggleTax(e.target.checked)}
+                  />
+                  <div className={`block w-14 h-8 rounded-full ${invoice.taxEnabled ? 'bg-blue-600' : 'bg-gray-400'}`}></div>
+                  <div className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition ${invoice.taxEnabled ? 'transform translate-x-6' : ''}`}></div>
+                </div>
+                <div className="ml-3 text-gray-700 font-medium">
+                  {invoice.taxEnabled ? 'Enabled' : 'Disabled'}
+                </div>
+              </label>
+            </div>
+
+            {invoice.taxEnabled && invoice.taxes && (
+              <div className="space-y-4 mt-4">
+                <div className="text-sm text-gray-500 mb-2">
+                  Subtotal: ${subtotal.toFixed(2)}
+                </div>
+                
+                {invoice.taxes.map(tax => (
+                  <div key={tax.id} className="flex items-center space-x-4 bg-gray-50 p-3 rounded-md">
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id={`tax-${tax.id}`}
+                        checked={tax.enabled}
+                        onChange={(e) => toggleTaxItem(tax.id, e.target.checked)}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <label htmlFor={`tax-${tax.id}`} className="ml-2 block text-sm text-gray-700">{tax.name}</label>
+                    </div>
+                    
+                    <div className="flex-grow">
+                      <div className="flex items-center">
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={tax.rate}
+                          onChange={(e) => updateTaxRate(tax.id, parseFloat(e.target.value) || 0)}
+                          disabled={!tax.enabled}
+                          className="block w-24 rounded border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 text-right"
+                        />
+                        <span className="ml-2">{tax.isPercentage ? '%' : '$'}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="text-right min-w-[80px]">
+                      ${tax.enabled ? tax.amount.toFixed(2) : '0.00'}
+                    </div>
+                  </div>
+                ))}
+                
+                <div className="text-right font-semibold">
+                  Total: ${(subtotal + invoice.taxes.reduce((sum, tax) => sum + (tax.enabled ? tax.amount : 0), 0)).toFixed(2)}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Notes Section */}
         <div className="pt-6">

@@ -33,7 +33,12 @@ const InvoicePreview = forwardRef<HTMLDivElement, Props>(({ invoice }, ref) => {
   return (
     <div ref={ref} className="invoice-preview bg-white">
       <div className="p-6">
-        <TemplateComponent invoice={invoice} />
+        <TemplateComponent 
+          invoice={{
+            ...invoice,
+            taxes: invoice.taxes?.filter(t => t.enabled) || []
+          }} 
+        />
       </div>
     </div>
   );

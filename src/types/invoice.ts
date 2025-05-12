@@ -13,6 +13,24 @@ export interface InvoiceItemConfig {
   calculate?: (fields: Record<string, any>) => number;
 }
 
+// Tax type definition
+export interface TaxType {
+  id: string;
+  name: string;
+  description: string;
+  defaultRate: number;
+  isPercentage: boolean;
+}
+
+// Tax configuration for template
+export interface TaxConfig {
+  id: string;
+  enabled: boolean;
+  rate: number;
+  isPercentage: boolean;
+  amount?: number;
+}
+
 export interface InvoiceTemplateConfig {
   id: string;
   name: string;
@@ -20,6 +38,17 @@ export interface InvoiceTemplateConfig {
   itemFields: ItemFieldConfig[];
   validationRules?: ValidationRules;
   defaultNotes?: string;
+  taxes: {
+    enabled: boolean;
+    config: {
+      taxCalculation: (subtotal: number, selectedTaxes: TaxConfig[]) => {
+        taxAmount: number;
+        total: number;
+        taxes: TaxConfig[];
+      };
+      availableTaxes: TaxType[];
+    };
+  };
   meta?: Record<string, any>;
   previewImage: string;
   industry: 'general' | 'it' | 'construction' | 'healthcare' | 'legal' | 'freelance';
@@ -58,6 +87,16 @@ export interface InvoiceItem {
   amount: number;
 }
 
+// Tax applied to an invoice
+export interface InvoiceTax {
+  id: string;
+  name: string;
+  rate: number;
+  isPercentage: boolean;
+  amount: number;
+  enabled: boolean;
+}
+
 export interface Invoice {
   id: string;
   invoiceNumber: string;
@@ -75,9 +114,11 @@ export interface Invoice {
   };
   items: InvoiceItem[];
   notes: string;
-  template: 'modern' | 'minimal' | 'professional';
+  template: 'modern' | 'minimal' | 'professional' | 'freelancer' | 'legion';
   invoiceType: 'hourly' | 'fixed_term';
   templateConfig: string; // Reference to template config ID
+  taxes?: InvoiceTax[]; // Added tax information
+  taxEnabled?: boolean; // Flag to toggle tax display
 }
 
 export interface InvoiceTemplateData {
@@ -101,6 +142,8 @@ export interface InvoiceTemplateData {
     amount: number;
   }>;
   total: number;
+  taxes?: InvoiceTax[]; // Added tax information
+  taxEnabled?: boolean; // Flag to toggle tax display
   notes?: string;
 }
 
@@ -123,5 +166,7 @@ export const defaultInvoice: Invoice = {
   notes: '',
   template: 'modern',
   invoiceType: 'hourly',
-  templateConfig: 'hourly'
+  templateConfig: 'hourly',
+  taxes: [],
+  taxEnabled: false
 };

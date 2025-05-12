@@ -7,24 +7,51 @@
  */
 
 import html2pdf from 'html2pdf.js';
-import { InvoiceTemplateData } from '../types/invoice';
+import { InvoiceTemplateData } from '../templates/pdfTemplates';
 import * as templateStrings from '../templates/templateStrings';
 import Mustache from 'mustache';
 
 export const generatePDF = async (data: InvoiceTemplateData, templateStyle: string = 'modern'): Promise<Blob> => {
   try {
-    // Format the data for the template
-    const formattedData: InvoiceTemplateData = {
-      ...data,
-      items: data.items.map((item: { description?: string; quantity?: number; price?: number }) => ({
+    // Format the data for the template based on template type
+    const formattedData: InvoiceTemplateData = { ...data };
+
+    // Process items based on template type
+    if (templateStyle === 'freelancer') {
+      formattedData.items = data.items.map((item) => ({
+        ...item,
+        description: item.description || '',
+        rate: item.rate || 0,
+        hours: item.hours || 0,
+        amount: item.amount || 0
+      }));
+    } else if (templateStyle === 'legion') {
+      formattedData.items = data.items.map((item) => ({
+        ...item,
+        description: item.description || '',
+        period: item.period || '',
+        amount: item.amount || 0
+      }));
+    } else {
+      // Standard templates (modern, minimal, professional)
+      formattedData.items = data.items.map((item) => ({
         ...item,
         description: item.description || '',
         quantity: item.quantity || 0,
         price: item.price || 0,
-        amount: (item.quantity || 0) * (item.price || 0)
-      })),
-      total: data.total || 0
-    };
+        amount: item.amount || 0
+      }));
+    }
+
+    // Ensure tax data is properly formatted
+    if (data.taxEnabled && data.taxes) {
+      formattedData.taxes = data.taxes.map(tax => ({
+        ...tax,
+        amount: tax.amount || 0,
+        rate: tax.rate || 0,
+        isPercentage: tax.isPercentage
+      }));
+    }
 
     // Get the template string dynamically
     const templateKey = `${templateStyle}TemplateString` as keyof typeof templateStrings;

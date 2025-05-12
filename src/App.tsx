@@ -34,6 +34,8 @@ function App() {
     setTimeout(() => setMessage(null), 3000);
   };
 
+  console.log(invoice);
+
   return (
     <div className="min-h-screen bg-gray-100">
       <div className="max-w-[1800px] mx-auto">

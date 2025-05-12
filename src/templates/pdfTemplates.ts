@@ -6,8 +6,15 @@
  * https://github.com/mandalorian99/invoiceable-web
  */
 
-import { modernTemplateString, minimalTemplateString, professionalTemplateString } from './templateStrings';
+import { 
+  modernTemplateString, 
+  minimalTemplateString, 
+  professionalTemplateString,
+  freelancerTemplateString,
+  legionTemplateString
+} from './templateStrings';
 import Mustache from 'mustache';
+import { InvoiceTax } from '../types/invoice';
 
 // Type declaration for template data
 export interface InvoiceTemplateData {
@@ -29,8 +36,14 @@ export interface InvoiceTemplateData {
     quantity: number;
     price: number;
     amount: number;
+    rate?: number;
+    hours?: number;
+    period?: string;
   }>;
+  subtotal: number;
   total: number;
+  taxes?: InvoiceTax[];
+  taxEnabled?: boolean;
   notes?: string;
 }
 
@@ -43,9 +56,13 @@ function processTemplate(template: string, data: InvoiceTemplateData): string {
 export const modernTemplate = (data: InvoiceTemplateData) => processTemplate(modernTemplateString, data);
 export const minimalTemplate = (data: InvoiceTemplateData) => processTemplate(minimalTemplateString, data);
 export const professionalTemplate = (data: InvoiceTemplateData) => processTemplate(professionalTemplateString, data);
+export const freelancerTemplate = (data: InvoiceTemplateData) => processTemplate(freelancerTemplateString, data);
+export const legionTemplate = (data: InvoiceTemplateData) => processTemplate(legionTemplateString, data);
 
 export const templates = {
   modern: modernTemplate,
   minimal: minimalTemplate,
-  professional: professionalTemplate
+  professional: professionalTemplate,
+  freelancer: freelancerTemplate,
+  legion: legionTemplate
 } as const; 

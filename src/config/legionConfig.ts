@@ -6,6 +6,7 @@
  * https://github.com/mandalorian99/invoiceable-web
  */
 import { InvoiceTemplateConfig } from '../types/invoice';
+import { getAvailableTaxesForTemplate } from './taxConfig';
 
 export const legionConfig: InvoiceTemplateConfig = {
   id: 'legion',
@@ -55,6 +56,30 @@ export const legionConfig: InvoiceTemplateConfig = {
         message: 'Minimum invoice amount is $100 per period'
       }
     ]
+  },
+
+  // Tax configuration
+  taxes: {
+    enabled: true,
+    config: {
+      availableTaxes: getAvailableTaxesForTemplate('legion'),
+      taxCalculation: (subtotal, selectedTaxes) => {
+        let taxAmount = 0;
+        const calculatedTaxes = selectedTaxes.map(tax => {
+          const amount = tax.isPercentage 
+            ? subtotal * (tax.rate / 100)
+            : tax.rate;
+          taxAmount += amount;
+          return { ...tax, amount };
+        });
+
+        return {
+          taxAmount,
+          total: subtotal + taxAmount,
+          taxes: calculatedTaxes
+        };
+      }
+    }
   },
 
   meta: {

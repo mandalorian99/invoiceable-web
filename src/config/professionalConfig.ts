@@ -6,6 +6,7 @@
  * https://github.com/mandalorian99/invoiceable-web
  */
 import { InvoiceTemplateConfig } from '../types/invoice';
+import { getAvailableTaxesForTemplate } from './taxConfig';
 
 export const professionalConfig: InvoiceTemplateConfig = {
   id: 'professional',
@@ -62,6 +63,25 @@ export const professionalConfig: InvoiceTemplateConfig = {
   },
   
   defaultNotes: 'Terms: Net 30 days. Late fees may apply.',
+  
+  // Tax configuration
+  taxes: {
+    enabled: true,
+    config: {
+      availableTaxes: getAvailableTaxesForTemplate('professional'),
+      taxCalculation: (subtotal: number, selectedTaxes) => {
+        let taxAmount = 0;
+        const taxes = selectedTaxes.map(tax => {
+          const amount = tax.isPercentage 
+            ? subtotal * (tax.rate / 100)
+            : tax.rate;
+          taxAmount += amount;
+          return { ...tax, amount };
+        });
+        return { taxAmount, total: subtotal + taxAmount, taxes };
+      }
+    }
+  },
   
   meta: {
     accentColor: '#1a365d',
