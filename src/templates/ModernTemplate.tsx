@@ -68,13 +68,12 @@ export default function ModernTemplate({ invoice }: { invoice: Invoice }) {
               <td className="py-4 text-right">{currencySymbol}{item.price.toFixed(2)}</td>
               <td className="py-4 text-right">{currencySymbol}{(item.amount || (item.quantity * item.price)).toFixed(2)}</td>
             </tr>
-            </tr>
           ))}
         </tbody>
         <tfoot>
           <tr>
             <td colSpan={3} className="py-4 text-right font-semibold">Subtotal:</td>
-            <td className="py-4 text-right font-semibold">${subtotal.toFixed(2)}</td>
+            <td className="py-4 text-right font-semibold">{currencySymbol}{subtotal.toFixed(2)}</td>
           </tr>
           
           {/* Display taxes if enabled */}

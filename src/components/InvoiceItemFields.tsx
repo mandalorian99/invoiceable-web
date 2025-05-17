@@ -52,7 +52,7 @@ export default function InvoiceItemFields({ item, templateConfig, onUpdate, onRe
         <label className="block text-sm font-medium text-gray-700">Amount</label>
         <div className="w-full rounded-md bg-gray-100 px-3 py-2 text-right 
                       text-sm font-medium text-gray-700">
-          ${item.amount.toFixed(2)}
+          {item.amount.toFixed(2)}
         </div>
       </div>
 

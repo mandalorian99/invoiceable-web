@@ -71,16 +71,16 @@ export default function LegionTemplate({ invoice }: { invoice: Invoice }) {
         <tfoot>
           <tr>
             <td colSpan={2} className="py-3 px-4 text-right">SUBTOTAL:</td>
-            <td className="py-3 px-4 text-right">${subtotal.toFixed(2)}</td>
+            <td className="py-3 px-4 text-right">{currencySymbol}{subtotal.toFixed(2)}</td>
           </tr>
           
           {/* Display taxes if enabled */}
           {invoice.taxEnabled && invoice.taxes && invoice.taxes.filter(tax => tax.enabled).map(tax => (
             <tr key={tax.id}>
               <td colSpan={2} className="py-2 px-4 text-right text-gray-600">
-                {tax.name} ({tax.isPercentage ? `${tax.rate}%` : '$' + tax.rate}):
+                {tax.name} ({tax.isPercentage ? `${tax.rate}%` : currencySymbol + tax.rate}):
               </td>
-              <td className="py-2 px-4 text-right text-gray-600">${tax.amount.toFixed(2)}</td>
+              <td className="py-2 px-4 text-right text-gray-600">{currencySymbol}{tax.amount.toFixed(2)}</td>
             </tr>
           ))}
           

@@ -40,6 +40,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
     
     onInvoiceChange({
       ...invoice,
+      currency: invoice.currency || '$', // Add default currency if not set
       taxes: initialTaxes,
       taxEnabled: templateConfig.taxes.enabled
     });
@@ -361,7 +362,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
             {invoice.taxEnabled && invoice.taxes && (
               <div className="space-y-4 mt-4">
                 <div className="text-sm text-gray-500 mb-2">
-                  Subtotal: ${subtotal.toFixed(2)}
+                  Subtotal: {invoice.currency} {subtotal.toFixed(2)}
                 </div>
                 
                 {invoice.taxes.map(tax => (
@@ -393,13 +394,13 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
                     </div>
                     
                     <div className="text-right min-w-[80px]">
-                      ${tax.enabled ? tax.amount.toFixed(2) : '0.00'}
+                      {invoice.currency} {tax.enabled ? tax.amount.toFixed(2) : '0.00'}
                     </div>
                   </div>
                 ))}
                 
                 <div className="text-right font-semibold">
-                  Total: ${(subtotal + invoice.taxes.reduce((sum, tax) => sum + (tax.enabled ? tax.amount : 0), 0)).toFixed(2)}
+                  Total: {invoice.currency} {(subtotal + invoice.taxes.reduce((sum, tax) => sum + (tax.enabled ? tax.amount : 0), 0)).toFixed(2)}
                 </div>
               </div>
             )}

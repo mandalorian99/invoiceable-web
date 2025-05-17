@@ -81,16 +81,16 @@ export default function ProfessionalTemplate({ invoice }: { invoice: Invoice }) 
           <tfoot>
             <tr className="border-t border-gray-300">
               <td colSpan={3} className="py-4 px-6 text-right font-semibold text-gray-900">Subtotal:</td>
-              <td className="py-4 px-6 text-right font-semibold text-gray-900">${subtotal.toFixed(2)}</td>
+              <td className="py-4 px-6 text-right font-semibold text-gray-900">{currencySymbol}{subtotal.toFixed(2)}</td>
             </tr>
             
             {/* Display taxes if enabled */}
             {invoice.taxEnabled && invoice.taxes && invoice.taxes.filter(tax => tax.enabled).map(tax => (
               <tr key={tax.id}>
                 <td colSpan={3} className="py-3 px-6 text-right text-gray-700">
-                  {tax.name} ({tax.isPercentage ? `${tax.rate}%` : '$' + tax.rate}):
+                  {tax.name} ({tax.isPercentage ? `${tax.rate}%` : currencySymbol + tax.rate}):
                 </td>
-                <td className="py-3 px-6 text-right text-gray-700">${tax.amount.toFixed(2)}</td>
+                <td className="py-3 px-6 text-right text-gray-700">{currencySymbol}{tax.amount.toFixed(2)}</td>
               </tr>
             ))}
             
