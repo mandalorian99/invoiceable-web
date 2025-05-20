@@ -60,6 +60,8 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
         invoiceNumber: invoice.invoiceNumber,
         date: invoice.date,
         dueDate: invoice.dueDate,
+        currency: invoice.currency,
+        currencySymbol: invoice.currency || '$',
         from: {
           name: invoice.from.name,
           email: invoice.from.email,
