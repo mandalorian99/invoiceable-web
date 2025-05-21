@@ -16,7 +16,7 @@ export default function MinimalTemplate({ invoice }: { invoice: Invoice }) {
     : 0;
   
   // Calculate total including taxes
-  const total = invoice.items.reduce((sum, item) => sum + item.quantity * item.price, 0);
+  const total = subtotal + taxAmount;
   const currencySymbol = invoice.currency || '$';
 
   return (

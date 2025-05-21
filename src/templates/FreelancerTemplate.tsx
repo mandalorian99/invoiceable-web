@@ -16,7 +16,7 @@ export default function FreelancerTemplate({ invoice }: { invoice: Invoice }) {
     : 0;
   
   // Calculate total including taxes
-  const total = invoice.items.reduce((sum, item) => sum + (item.rate * item.hours), 0);
+  const total = subtotal + taxAmount;
   const currencySymbol = invoice.currency || '$'; // Default to $ if currency not set
 
   return (

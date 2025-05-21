@@ -17,7 +17,7 @@ export default function LegionTemplate({ invoice }: { invoice: Invoice }) {
     : 0;
   
   // Calculate total including taxes
-  const total = invoice.items.reduce((sum, item) => sum + (item.amount || 0), 0);
+  const total = subtotal + taxAmount;
   const currencySymbol = invoice.currency || '$';
 
   return (
