@@ -17,6 +17,7 @@ export default function MinimalTemplate({ invoice }: { invoice: Invoice }) {
   
   // Calculate total including taxes
   const total = subtotal + taxAmount;
+  const currencySymbol = invoice.currency || '$';
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white font-mono">
@@ -66,30 +67,30 @@ export default function MinimalTemplate({ invoice }: { invoice: Invoice }) {
               <tr key={item.id} className="border-b">
                 <td className="py-2">{item.description}</td>
                 <td className="py-2 text-right">{item.quantity}</td>
-                <td className="py-2 text-right">${item.price.toFixed(2)}</td>
-                <td className="py-2 text-right">${(item.amount || (item.quantity * item.price)).toFixed(2)}</td>
+                <td className="py-2 text-right">{currencySymbol}{item.price.toFixed(2)}</td>
+                <td className="py-2 text-right">{currencySymbol}{(item.amount || (item.quantity * item.price)).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
           <tfoot>
             <tr>
               <td colSpan={3} className="py-4 text-right">Subtotal:</td>
-              <td className="py-4 text-right">${subtotal.toFixed(2)}</td>
+              <td className="py-4 text-right">{currencySymbol}{subtotal.toFixed(2)}</td>
             </tr>
             
             {/* Display taxes if enabled */}
             {invoice.taxEnabled && invoice.taxes && invoice.taxes.filter(tax => tax.enabled).map(tax => (
               <tr key={tax.id}>
                 <td colSpan={3} className="py-2 text-right">
-                  {tax.name} ({tax.isPercentage ? `${tax.rate}%` : '$' + tax.rate}):
+                  {tax.name} ({tax.isPercentage ? `${tax.rate}%` : currencySymbol + tax.rate}):
                 </td>
-                <td className="py-2 text-right">${tax.amount.toFixed(2)}</td>
+                <td className="py-2 text-right">{currencySymbol}{tax.amount.toFixed(2)}</td>
               </tr>
             ))}
             
             <tr className="border-t border-black">
               <td colSpan={3} className="py-4 text-right font-bold">Total:</td>
-              <td className="py-4 text-right font-bold">${total.toFixed(2)}</td>
+              <td className="py-4 text-right font-bold">{currencySymbol}{total.toFixed(2)}</td>
             </tr>
           </tfoot>
         </table>

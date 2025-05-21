@@ -134,23 +134,23 @@
         <tr>
           <td>{{description}}</td>
           <td>{{quantity}}</td>
-          <td class="amount">${{price}}</td>
-          <td class="amount">${{amount}}</td>
+          <td class="amount">{{currencySymbol}}{{price}}</td>
+          <td class="amount">{{currencySymbol}}{{amount}}</td>
         </tr>
         {{/items}}
       </tbody>
       <tfoot>
         <tr>
           <td colspan="3" class="subtotal">Subtotal:</td>
-          <td class="subtotal">${{subtotal}}</td>
+          <td class="subtotal">{{currencySymbol}}{{subtotal}}</td>
         </tr>
         
         {{#taxEnabled}}
           {{#taxes}}
             {{#enabled}}
             <tr class="tax-row">
-              <td colspan="3" class="tax-amount">{{name}} ({{#isPercentage}}{{rate}}%{{/isPercentage}}{{^isPercentage}}${{rate}}{{/isPercentage}}):</td>
-              <td class="tax-amount">${{amount}}</td>
+              <td colspan="3" class="tax-amount">{{name}} ({{#isPercentage}}{{rate}}%{{/isPercentage}}{{^isPercentage}}{{currencySymbol}}{{rate}}{{/isPercentage}}):</td>
+              <td class="tax-amount">{{currencySymbol}}{{amount}}</td>
             </tr>
             {{/enabled}}
           {{/taxes}}
@@ -158,7 +158,7 @@
 
         <tr>
           <td colspan="3" class="total">Total:</td>
-          <td class="total">${{total}}</td>
+          <td class="total">{{currencySymbol}}{{total}}</td>
         </tr>
       </tfoot>
     </table>

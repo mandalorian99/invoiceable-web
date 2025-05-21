@@ -45,6 +45,8 @@ export interface InvoiceTemplateData {
   taxes?: InvoiceTax[];
   taxEnabled?: boolean;
   notes?: string;
+  currency: string;
+  currencySymbol: string;
 }
 
 // Helper function to process templates

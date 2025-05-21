@@ -119,6 +119,7 @@ export interface Invoice {
   templateConfig: string; // Reference to template config ID
   taxes?: InvoiceTax[]; // Added tax information
   taxEnabled?: boolean; // Flag to toggle tax display
+  currency: string;
 }
 
 export interface InvoiceTemplateData {
@@ -168,5 +169,6 @@ export const defaultInvoice: Invoice = {
   invoiceType: 'hourly',
   templateConfig: 'hourly',
   taxes: [],
-  taxEnabled: false
+  taxEnabled: false,
+  currency: '$'
 };

@@ -14,7 +14,10 @@ import Mustache from 'mustache';
 export const generatePDF = async (data: InvoiceTemplateData, templateStyle: string = 'modern'): Promise<Blob> => {
   try {
     // Format the data for the template based on template type
-    const formattedData: InvoiceTemplateData = { ...data };
+    const formattedData: InvoiceTemplateData = {
+      ...data,
+      currencySymbol: data.currencySymbol || '$', // Ensure currency symbol is available with fallback
+    };
 
     // Process items based on template type
     if (templateStyle === 'freelancer') {

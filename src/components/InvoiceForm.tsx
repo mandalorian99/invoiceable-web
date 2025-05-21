@@ -11,6 +11,7 @@ import { TEMPLATE_CONFIGS } from '../config/templates';
 import { useState, useEffect } from 'react';
 import TemplateSelector from './TemplateSelector';
 import InvoiceItems from './InvoiceItems';
+import CurrencySelector from './CurrencySelector';
 
 interface Props {
   invoice: Invoice;
@@ -39,6 +40,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
     
     onInvoiceChange({
       ...invoice,
+      currency: invoice.currency || '$', // Add default currency if not set
       taxes: initialTaxes,
       taxEnabled: templateConfig.taxes.enabled
     });
@@ -227,6 +229,11 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
               onChange={(e) => onInvoiceChange({ ...invoice, invoiceNumber: e.target.value })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
+            <CurrencySelector
+              value={invoice.currency}
+              onChange={(currencyCode) => onInvoiceChange({ ...invoice, currency: currencyCode })}
+              className="mt-4"
+            />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Date</label>
@@ -355,7 +362,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
             {invoice.taxEnabled && invoice.taxes && (
               <div className="space-y-4 mt-4">
                 <div className="text-sm text-gray-500 mb-2">
-                  Subtotal: ${subtotal.toFixed(2)}
+                  Subtotal: {invoice.currency} {subtotal.toFixed(2)}
                 </div>
                 
                 {invoice.taxes.map(tax => (
@@ -387,13 +394,13 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
                     </div>
                     
                     <div className="text-right min-w-[80px]">
-                      ${tax.enabled ? tax.amount.toFixed(2) : '0.00'}
+                      {invoice.currency} {tax.enabled ? tax.amount.toFixed(2) : '0.00'}
                     </div>
                   </div>
                 ))}
                 
                 <div className="text-right font-semibold">
-                  Total: ${(subtotal + invoice.taxes.reduce((sum, tax) => sum + (tax.enabled ? tax.amount : 0), 0)).toFixed(2)}
+                  Total: {invoice.currency} {(subtotal + invoice.taxes.reduce((sum, tax) => sum + (tax.enabled ? tax.amount : 0), 0)).toFixed(2)}
                 </div>
               </div>
             )}

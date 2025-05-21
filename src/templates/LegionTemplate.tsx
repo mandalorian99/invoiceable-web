@@ -18,6 +18,7 @@ export default function LegionTemplate({ invoice }: { invoice: Invoice }) {
   
   // Calculate total including taxes
   const total = subtotal + taxAmount;
+  const currencySymbol = invoice.currency || '$';
 
   return (
     <div className="font-sans p-8 bg-white">
@@ -63,29 +64,29 @@ export default function LegionTemplate({ invoice }: { invoice: Invoice }) {
             <tr key={item.id} className="border-b">
               <td className="py-3 px-4">{item.description}</td>
               <td className="py-3 px-4 text-center">{item.period}</td>
-              <td className="py-3 px-4 text-right">${(item.amount || 0).toFixed(2)}</td>
+              <td className="py-3 px-4 text-right">{currencySymbol}{(item.amount || 0).toFixed(2)}</td>
             </tr>
           ))}
         </tbody>
         <tfoot>
           <tr>
             <td colSpan={2} className="py-3 px-4 text-right">SUBTOTAL:</td>
-            <td className="py-3 px-4 text-right">${subtotal.toFixed(2)}</td>
+            <td className="py-3 px-4 text-right">{currencySymbol}{subtotal.toFixed(2)}</td>
           </tr>
           
           {/* Display taxes if enabled */}
           {invoice.taxEnabled && invoice.taxes && invoice.taxes.filter(tax => tax.enabled).map(tax => (
             <tr key={tax.id}>
               <td colSpan={2} className="py-2 px-4 text-right text-gray-600">
-                {tax.name} ({tax.isPercentage ? `${tax.rate}%` : '$' + tax.rate}):
+                {tax.name} ({tax.isPercentage ? `${tax.rate}%` : currencySymbol + tax.rate}):
               </td>
-              <td className="py-2 px-4 text-right text-gray-600">${tax.amount.toFixed(2)}</td>
+              <td className="py-2 px-4 text-right text-gray-600">{currencySymbol}{tax.amount.toFixed(2)}</td>
             </tr>
           ))}
           
           <tr className="bg-gray-50">
             <td colSpan={2} className="py-3 px-4 text-right font-bold">TOTAL:</td>
-            <td className="py-3 px-4 text-right font-bold">${total.toFixed(2)}</td>
+            <td className="py-3 px-4 text-right font-bold">{currencySymbol}{total.toFixed(2)}</td>
           </tr>
         </tfoot>
       </table>
