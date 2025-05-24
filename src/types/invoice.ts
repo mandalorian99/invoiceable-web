@@ -106,11 +106,13 @@ export interface Invoice {
     name: string;
     email: string;
     address: string;
+    gstin?: string;
   };
   to: {
     name: string;
     email: string;
     address: string;
+    gstin?: string;
   };
   items: InvoiceItem[];
   notes: string;
@@ -120,6 +122,14 @@ export interface Invoice {
   taxes?: InvoiceTax[]; // Added tax information
   taxEnabled?: boolean; // Flag to toggle tax display
   currency: string;
+  bankDetails?: {
+    accountName: string;
+    accountNumber: string;
+    ifscCode: string;
+  };
+  signatory?: string;
+  amountInWords?: string;
+  paymentMode?: string;
 }
 
 export interface InvoiceTemplateData {
@@ -170,5 +180,13 @@ export const defaultInvoice: Invoice = {
   templateConfig: 'hourly',
   taxes: [],
   taxEnabled: false,
-  currency: '$'
+  currency: '$',
+  bankDetails: {
+    accountName: 'Account Name',
+    accountNumber: '1234567890',
+    ifscCode: 'IFSC1234567'
+  },
+  signatory: 'John Doe',
+  amountInWords: 'One thousand twenty-four dollars and fifty cents',
+  paymentMode: 'NEFT / RTGS / Cheque / UPI'
 };
