@@ -46,6 +46,16 @@ export const girnarConfig: InvoiceTemplateConfig = {
       }
     },
     {
+      key: 'rate',
+      label: 'Daily Rate',
+      type: 'number',
+      required: true,
+      validation: {
+        min: 0,
+        max: 100000
+      }
+    },
+    {
       key: 'workedDays',
       label: 'Worked Days',
       type: 'number',
@@ -67,8 +77,11 @@ export const girnarConfig: InvoiceTemplateConfig = {
     {
       key: 'amount',
       label: 'Taxable Amount',
-      type: 'calculated',
-      calculate: (fields) => fields.rate * fields.workedDays
+      type: 'number',
+      required: true,
+      validation: {
+        min: 0
+      }
     }
   ],
 

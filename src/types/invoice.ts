@@ -116,7 +116,7 @@ export interface Invoice {
   };
   items: InvoiceItem[];
   notes: string;
-  template: 'modern' | 'minimal' | 'professional' | 'freelancer' | 'legion';
+  template: 'modern' | 'minimal' | 'professional' | 'freelancer' | 'legion' | 'girnar';
   invoiceType: 'hourly' | 'fixed_term';
   templateConfig: string; // Reference to template config ID
   taxes?: InvoiceTax[]; // Added tax information
