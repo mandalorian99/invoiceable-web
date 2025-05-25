@@ -12,6 +12,7 @@ import ProfessionalTemplate from '../templates/ProfessionalTemplate';
 import FreelancerTemplate from '../templates/FreelancerTemplate';
 import { forwardRef } from 'react';
 import LegionTemplate from '../templates/LegionTemplate';
+import GirnarTemplate from '../templates/GirnarTemplate';
 
 interface Props {
   invoice: Invoice;
@@ -23,7 +24,8 @@ const InvoicePreview = forwardRef<HTMLDivElement, Props>(({ invoice }, ref) => {
     minimal: MinimalTemplate,
     professional: ProfessionalTemplate,
     freelancer: FreelancerTemplate,
-    legion: LegionTemplate
+    legion: LegionTemplate,
+    girnar: GirnarTemplate
   };
 
   // Rendering the template based on the invoice templates
@@ -36,7 +38,12 @@ const InvoicePreview = forwardRef<HTMLDivElement, Props>(({ invoice }, ref) => {
         <TemplateComponent 
           invoice={{
             ...invoice,
-            taxes: invoice.taxes?.filter(t => t.enabled) || []
+            taxes: invoice.taxes?.filter(t => t.enabled) || [],
+            bankDetails: invoice.bankDetails || {
+              accountName: '',
+              accountNumber: '',
+              ifscCode: ''
+            }
           }} 
         />
       </div>
