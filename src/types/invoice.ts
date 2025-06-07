@@ -98,6 +98,7 @@ export interface InvoiceTax {
 }
 
 export interface Invoice {
+  servicePeriod: string;
   id: string;
   invoiceNumber: string;
   date: string;

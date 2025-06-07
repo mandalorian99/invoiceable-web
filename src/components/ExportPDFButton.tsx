@@ -57,6 +57,7 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
 
       // Prepare data for the template
       const data = {
+        servicePeriod: invoice.servicePeriod,
         invoiceNumber: invoice.invoiceNumber,
         date: invoice.date,
         dueDate: invoice.dueDate,

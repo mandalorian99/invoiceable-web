@@ -326,6 +326,28 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
           </div>
         </div>
 
+        {/* Service Period */}
+        {invoice.template === 'legion' && (
+          <div className="pt-6">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+              <span className="mr-2">📅</span>
+              Service Period
+            </h3>
+            <div className="space-y-4">
+              <input
+                type="text"
+                placeholder="e.g. January 2024"
+                value={invoice.servicePeriod || ''}
+                onChange={(e) => onInvoiceChange({
+                  ...invoice,
+                  servicePeriod: e.target.value
+                })}
+                className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              />
+            </div>
+          </div>
+        )}
+
         <InvoiceItems
           invoice={invoice}
           templateConfig={TEMPLATE_CONFIGS[invoice.template]}
