@@ -7,5 +7,6 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
-  base: '/invoiceable-web/',
+  // Use base path only for GitHub Pages, not for Amplify
+  base: process.env.NODE_ENV === 'production' && process.env.GITHUB_PAGES ? '/invoiceable-web/' : '/',
 });
