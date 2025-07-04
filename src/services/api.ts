@@ -7,13 +7,13 @@
  */
 import { Invoice } from '../types/invoice';
 
-const API_BASE_URL = 'https://faas-blr1-8177d592.doserverless.co/api/v1/web/fn-0d7207c5-1bee-460f-b364-8ce0a98912ef/default/invoice-agent'; // Replace with your actual API URL
+const API_BASE_URL = 'https://anpmchp6apjae7kv22tfiwscwe0bdfka.lambda-url.ap-south-1.on.aws'; // Replace with your actual API URL
 
 export async function saveInvoice(invoice: Invoice): Promise<{ success: boolean; message: string }> {
   console.log(invoice);
   
   try {
-    const response = await fetch(`${API_BASE_URL}/invoices`, {
+    const response = await fetch(`${API_BASE_URL}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
