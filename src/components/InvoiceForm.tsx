@@ -22,29 +22,31 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Initialize taxes from template if available
-  useEffect(() => {
-    const templateConfig = TEMPLATE_CONFIGS[invoice.template];
-    // Always reset taxes when template changes
-    const initialTaxes = templateConfig.taxes.config.availableTaxes.map(tax => ({
-      id: tax.id,
-      name: tax.name,
-      rate: tax.defaultRate,
-      isPercentage: tax.isPercentage,
-      amount: 0,
-      enabled: false
-    })) || [];
-    
-    if (initialTaxes.length > 0) {
-      initialTaxes[0].enabled = true;
-    }
-    
-    onInvoiceChange({
-      ...invoice,
-      currency: invoice.currency || '$', // Add default currency if not set
-      taxes: initialTaxes,
-      taxEnabled: templateConfig.taxes.enabled
-    });
-  }, [invoice.template]); // Trigger only on template change
+      useEffect(() => {
+        const templateConfig = TEMPLATE_CONFIGS[invoice.template];
+
+        const initialTaxes = templateConfig.taxes.config.availableTaxes.map(tax => ({
+          id: tax.id,
+          name: tax.name,
+          rate: tax.defaultRate,
+          isPercentage: tax.isPercentage,
+          amount: 0,
+          enabled: false
+        })) || [];
+
+        if (initialTaxes.length > 0) {
+          initialTaxes[0].enabled = true;
+        }
+
+        const defaultCurrency = getDefaultCurrencySymbol();
+
+        onInvoiceChange({
+          ...invoice,
+          currency: invoice.currency === '$' ? defaultCurrency : invoice.currency,
+          taxes: initialTaxes,
+          taxEnabled: templateConfig.taxes.enabled
+        });
+      }, [invoice.template]);// Trigger only on template change
 
   // Calculate tax amounts whenever items change
   useEffect(() => {
@@ -208,6 +210,29 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
       })),
       taxEnabled: newConfig.taxes.enabled
     });
+  };
+  const getDefaultCurrencySymbol = (): string => {
+    try {
+      const locale = Intl.NumberFormat().resolvedOptions().locale;
+      const region = locale.split('-')[1] || 'US';
+
+      const regionToCurrency: Record<string, string> = {
+        US: '$',
+        IN: '₹',
+        GB: '£',
+        EU: '€',
+        JP: '¥',
+        AU: 'A$',
+        CA: 'C$',
+        CH: 'Fr',
+        CN: '¥',
+        SG: 'S$',
+      };
+
+      return regionToCurrency[region] || '$';
+    } catch {
+      return '$';
+    }
   };
 
   return (
