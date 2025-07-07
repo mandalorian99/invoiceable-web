@@ -1,4 +1,4 @@
-/**
+/**AGPL-3.0 License
  * @license
  * Invoiceable - Open Source Invoice Builder
  * Copyright (C) 2024 Mahendra Choudhary
@@ -34,10 +34,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
       enabled: false
     })) || [];
     
-    if (initialTaxes.length > 0) {
-      initialTaxes[0].enabled = true;
-    }
-    
+  
     onInvoiceChange({
       ...invoice,
       currency: invoice.currency || '$', // Add default currency if not set
@@ -195,7 +192,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
     
     onInvoiceChange({
       ...invoice,
-      template: templateId,
+     template: templateId,
       from: invoice.from,
       to: invoice.to,
       taxes: newConfig.taxes.config.availableTaxes.map(tax => ({
@@ -204,7 +201,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
         rate: tax.defaultRate,
         isPercentage: tax.isPercentage,
         amount: 0,
-        enabled: tax.id === 'vat' // Or your default logic
+        enabled: tax.id === 'none' // Or your default logic
       })),
       taxEnabled: newConfig.taxes.enabled
     });
