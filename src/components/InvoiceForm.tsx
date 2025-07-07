@@ -1,4 +1,4 @@
-/**
+/**AGPL-3.0 License
  * @license
  * Invoiceable - Open Source Invoice Builder
  * Copyright (C) 2024 Mahendra Choudhary
@@ -192,7 +192,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
     
     onInvoiceChange({
       ...invoice,
-      template: templateId,
+     template: templateId,
       from: invoice.from,
       to: invoice.to,
       taxes: newConfig.taxes.config.availableTaxes.map(tax => ({
