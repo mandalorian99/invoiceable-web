@@ -57,7 +57,7 @@ export default function GirnarTemplate({ invoice }: { invoice: Invoice }) {
                 <td className="border border-black p-2">{item.description}</td>
                 <td className="border border-black p-2">{item.hsnSac}</td>
                 <td className="border border-black p-2">{item.resourceName}</td>
-                <td className="border border-black p-2">{item.quantity}</td>
+                <td className="border border-black p-2">{item.workedDays}</td>
                 <td className="border border-black p-2">{item.period}</td>
                 <td className="border border-black p-2">₹{item.amount?.toLocaleString('en-IN')}</td>
               </tr>
@@ -113,7 +113,7 @@ export default function GirnarTemplate({ invoice }: { invoice: Invoice }) {
       {/* Declaration */}
       <div className="mt-8">
         <h2 className="text-lg font-bold mb-2">Declaration</h2>
-        <p>We declare that this invoice reflects the actual price of the services rendered and that all particulars stated herein are true and correct.</p>
+        <p>{invoice.notes || 'We declare that this invoice reflects the actual price of the services rendered and that all particulars stated herein are true and correct.'}</p>
         <p className="mt-2">Mode of Payment: {invoice.paymentMode || 'NEFT / RTGS / Cheque / UPI'}</p>
       </div>
 

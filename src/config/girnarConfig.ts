@@ -79,6 +79,7 @@ export const girnarConfig: InvoiceTemplateConfig = {
       label: 'Taxable Amount',
       type: 'number',
       required: true,
+      calculate: (fields) => fields.workedDays * fields.rate,
       validation: {
         min: 0
       }
