@@ -35,7 +35,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
     })) || [];
     
     if (initialTaxes.length > 0) {
-      initialTaxes[0].enabled = true;
+      initialTaxes[0].enabled = false;
     }
     
     onInvoiceChange({
@@ -204,7 +204,7 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
         rate: tax.defaultRate,
         isPercentage: tax.isPercentage,
         amount: 0,
-        enabled: tax.id === 'vat' // Or your default logic
+        enabled:  false //tax.id === 'vat' // Or your default logic
       })),
       taxEnabled: newConfig.taxes.enabled
     });
