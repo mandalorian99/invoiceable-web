@@ -34,14 +34,18 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
         // Freelancer template uses rate and hours
         subtotal = invoice.items.reduce((sum, item) => 
           sum + (item.amount || (item.rate * item.hours) || 0), 0);
+      
+        
       } else if (invoice.template === 'legion') {
         // Legion template has a direct amount
         subtotal = invoice.items.reduce((sum, item) => 
           sum + (item.amount || 0), 0);
+        
       } else {
         // Other templates use quantity and price
         subtotal = invoice.items.reduce((sum, item) => 
           sum + (item.amount || (item.quantity * item.price) || 0), 0);
+        
       }
 
       // Calculate taxes using template's method
@@ -77,7 +81,7 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
           // Create a base item with common properties
           const exportItem: any = {
           description: item.description,
-            amount: item.amount || 0
+            amount: item.amount.toFixed(2) || 0
           };
 
           // Add template-specific properties
@@ -93,8 +97,8 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
 
           return exportItem;
         }),
-        subtotal,
-        total: taxCalculation.total,
+        subtotal:subtotal.toFixed(2),
+        total: taxCalculation.total.toFixed(2),
         taxes: taxCalculation.taxes.map(tax => {
           const taxType = TAX_TYPES.find(t => t.id === tax.id) || {
             name: 'Tax',
@@ -107,7 +111,7 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
             ...tax,
             name: taxType.name,
             description: taxType.description,
-            amount: tax.amount || 0
+            amount: tax.amount?.toFixed(2) || 0
           };
         }),
         taxEnabled: templateConfig.taxes.enabled,
