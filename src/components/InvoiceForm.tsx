@@ -57,14 +57,17 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
         // Freelancer template uses rate and hours
         subtotal = invoice.items.reduce((sum, item) => 
           sum + (item.amount || (item.rate * item.hours) || 0), 0);
+        subtotal.toFixed(2)
       } else if (invoice.template === 'legion') {
         // Legion template has a direct amount
         subtotal = invoice.items.reduce((sum, item) => 
           sum + (item.amount || 0), 0);
+        subtotal.toFixed(2)
       } else {
         // Other templates use quantity and price
         subtotal = invoice.items.reduce((sum, item) => 
           sum + (item.amount || (item.quantity * item.price) || 0), 0);
+        subtotal.toFixed(2)
       }
       
       const updatedTaxes = invoice.taxes.map(tax => ({
@@ -176,14 +179,17 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
     // Freelancer template uses rate and hours
     subtotal = invoice.items.reduce((sum, item) => 
       sum + (item.amount || (item.rate * item.hours) || 0), 0);
+    subtotal.toFixed(2)
   } else if (invoice.template === 'legion') {
     // Legion template has a direct amount
     subtotal = invoice.items.reduce((sum, item) => 
       sum + (item.amount || 0), 0);
+    subtotal.toFixed(2)
   } else {
     // Other templates use quantity and price
     subtotal = invoice.items.reduce((sum, item) => 
       sum + (item.amount || (item.quantity * item.price) || 0), 0);
+    subtotal.toFixed(2)
   }
 
   // Get current template config
@@ -241,6 +247,14 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
               type="date"
               value={invoice.date}
               onChange={(e) => onInvoiceChange({ ...invoice, date: e.target.value })}
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          
+            <label className="block text-sm font-medium text-gray-700">Due-date</label>
+            <input
+              type="date"
+              value={invoice.dueDate}
+              onChange={(e) => onInvoiceChange({ ...invoice, dueDate: e.target.value })}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
