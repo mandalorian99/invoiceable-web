@@ -153,7 +153,7 @@ export const defaultInvoice: Invoice = {
   id: '1',
   invoiceNumber: 'INV-001',
   date: new Date().toISOString().split('T')[0],
-  dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+  dueDate: new Date().toISOString().split('T')[0],
   from: {
     name: 'Your Company',
     email: 'your@email.com',
