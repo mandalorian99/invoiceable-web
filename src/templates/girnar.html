@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tax Invoice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 40px;
+      background: #fff;
+      color: #000;
+    }
+    h1 {
+      text-align: center;
+      font-size: 22px;
+    }
+    .section {
+      margin-bottom: 25px;
+    }
+    .section h2 {
+      font-size: 16px;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    .label {
+      font-weight: bold;
+    }
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .table, .table th, .table td {
+      border: 1px solid #000;
+    }
+    .table th, .table td {
+      padding: 8px;
+      text-align: left;
+      font-size: 14px;
+    }
+    .signature {
+      margin-top: 40px;
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+    .bank-details {
+      margin-top: 30px;
+    }
+    .text-right {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>TAX INVOICE</h1>
+
+  <div class="section">
+    <h2>Vendor Details</h2>
+    <p><span class="">Vendor Name:</span> Acme Software Solutions Pvt Ltd.</p>
+    <p><span class="">Vendor Address:</span> 123 Business Park, Sector 5, Mumbai</p>
+    <p><span class="">GSTIN:</span> 12ABCDE1234F5Z6</p>
+    <p><span class="">State Name & Code:</span> Maharashtra, Code: 400001</p>
+    <p><span class="">Invoice No:</span> INV-1002</p>
+    <p><span class="">Invoice Date:</span> 20/06/2024</p>
+    <p><span class="">PO Number:</span> PO/ACME/202425/0457</p>
+    <p><span class="">MSME No.:</span> -</p>
+  </div>
+
+  <div class="section">
+    <h2>Bill To</h2>
+    <p><span class="">Company Name:</span> Tech Solutions Pvt Limited</p>
+    <p><span class="">Address:</span> 456 Corporate Tower, MG Road, Bengaluru</p>
+    <p><span class="">GSTIN:</span> 29XYZAB8822C3D4</p>
+    <p><span class="">PAN:</span> AAAAA1234A</p>
+    <p><span class="">State Name & Code:</span> Karnataka, Code: 08</p>
+  </div>
+
+  <div class="section">
+    <h2>Details of Services Provided</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Sl.</th>
+          <th>Description of Service</th>
+          <th>HSN/SAC</th>
+          <th>Resource Name</th>
+          <th>Worked Days</th>
+          <th>Month</th>
+          <th>Taxable Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>ROR/SW - software development service</td>
+          <td>998314</td>
+          <td>John Doe</td>
+          <td>22</td>
+          <td>May 2024</td>
+          <td>Rs 200,000.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>Tax Summary</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Tax Type</th>
+          <th>Rate</th>
+          <th>Taxable Value</th>
+          <th>Tax Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SGST</td>
+          <td>9%</td>
+          <td>200,000.00 Rs</td>
+          <td>18,000.00 Rs</td>
+        </tr>
+        <tr>
+          <td>CGST</td>
+          <td>9%</td>
+          <td>200,000.00 Rs</td>
+          <td>18,000.00 Rs</td>
+        </tr>
+        <tr>
+          <td colspan="3" class="text-right label">Total Tax Amount</td>
+          <td>36,000.00 Rs</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <p>Total Invoice Value (INR): <span class="label">Rs. 236,000.00</span></p>
+    <p class="label">Amount in Words:</p> INR Two lakh thirty-six thousand rupees only
+  </div>
+
+  <div class="section">
+    <h2>Declaration</h2>
+    <p>We declare that this invoice reflects the actual price of the services rendered and that all particulars stated herein are true and correct.</p>
+    <p>Mode of Payment: NEFT / RTGS / Cheque / UPI</p>
+  </div>
+
+  <div class="bank-details">
+    <h2>Bank Details</h2>
+    <p><span class="label">Account Holder:</span> Acme Software Solutions Pvt Ltd.</p>
+    <p><span class="label">Bank Name:</span> HDFC Bank</p>
+    <p><span class="label">Account Number:</span> 3456-7890-1234-56</p>
+    <p><span class="label">Branch & IFSC Code:</span> Main Branch, HDFC0000001</p>
+  </div>
+
+  <div class="signature">
+    <p><span class="label">Authorized Signatory:</span> [Authorized Signatory]</p>
+  </div>
+
+</body>
+</html>

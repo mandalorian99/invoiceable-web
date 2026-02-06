@@ -115,7 +115,12 @@ const ExportPDFButton: React.FC<ExportPDFButtonProps> = ({ invoice }) => {
           };
         }),
         taxEnabled: templateConfig.taxes.enabled,
-        notes: invoice.notes
+        notes: invoice.notes,
+        bankDetails: invoice.bankDetails || {
+          accountName: '',
+          accountNumber: '',
+          ifscCode: ''
+        }
       };
 
       // Generate PDF using the invoice's template style

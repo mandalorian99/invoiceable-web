@@ -53,7 +53,11 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
       let subtotal = 0;
       
       // Different templates might use different item structures
-      if (invoice.template === 'freelancer') {
+      if (invoice.template === 'girnar') {
+        // Girnar template uses amount (pre-calculated) or fallback to workedDays * rate
+        subtotal = invoice.items.reduce((sum, item) =>
+          sum + (item.amount || (item.workedDays * item.rate) || 0), 0);
+      } else if (invoice.template === 'freelancer') {
         // Freelancer template uses rate and hours
         subtotal = invoice.items.reduce((sum, item) => 
           sum + (item.amount || (item.rate * item.hours) || 0), 0);
@@ -119,10 +123,27 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
   const updateItem = (id: string, field: string, value: any) => {
     const updatedItems = invoice.items.map(item => {
       if (item.id !== id) return item;
-      
+
       const updatedItem = { ...item, [field]: value };
-      
-      // Auto-calculate calculated fields
+
+      // Girnar-specific auto-calculation
+      if (invoice.template === 'girnar' && (field === 'rate' || field === 'workedDays')) {
+        const rate = parseFloat(updatedItem.rate) || 0;
+        const workedDays = parseFloat(updatedItem.workedDays) || 0;
+
+        // Calculate what the old amount should have been
+        const oldRate = parseFloat(item.rate) || 0;
+        const oldWorkedDays = parseFloat(item.workedDays) || 0;
+        const expectedOldAmount = oldRate * oldWorkedDays;
+
+        // Only auto-calculate if amount hasn't been manually modified
+        // (i.e., if current amount matches what it should be based on old values)
+        if (!item.amount || item.amount === expectedOldAmount) {
+          updatedItem.amount = rate * workedDays;
+        }
+      }
+
+      // Existing calculation logic for other templates
       TEMPLATE_CONFIGS[invoice.template].itemFields.forEach(configField => {
         if (configField.type === 'calculated' && configField.calculate) {
           updatedItem[configField.key] = configField.calculate(updatedItem);
@@ -175,7 +196,11 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
   let subtotal = 0;
   
   // Different templates might use different item structures
-  if (invoice.template === 'freelancer') {
+  if (invoice.template === 'girnar') {
+    // Girnar template uses workedDays * rate
+    subtotal = invoice.items.reduce((sum, item) => 
+      sum + (item.amount || (item.workedDays * item.rate) || 0), 0);
+  } else if (invoice.template === 'freelancer') {
     // Freelancer template uses rate and hours
     subtotal = invoice.items.reduce((sum, item) => 
       sum + (item.amount || (item.rate * item.hours) || 0), 0);
@@ -297,6 +322,18 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
               className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               rows={3}
             />
+            {invoice.template === 'girnar' && (
+              <input
+                type="text"
+                placeholder="Vendor GSTIN"
+                value={invoice.from.gstin || ''}
+                onChange={(e) => onInvoiceChange({
+                  ...invoice,
+                  from: { ...invoice.from, gstin: e.target.value }
+                })}
+                className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              />
+            )}
           </div>
         </div>
 
@@ -337,6 +374,18 @@ export default function InvoiceForm({ invoice, onInvoiceChange }: Props) {
               className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               rows={3}
             />
+            {invoice.template === 'girnar' && (
+              <input
+                type="text"
+                placeholder="Client GSTIN"
+                value={invoice.to.gstin || ''}
+                onChange={(e) => onInvoiceChange({
+                  ...invoice,
+                  to: { ...invoice.to, gstin: e.target.value }
+                })}
+                className="block w-full rounded-lg border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+              />
+            )}
           </div>
         </div>
 
